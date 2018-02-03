@@ -2,18 +2,24 @@
 
 import HomeScreen from './components/HomeScreen/';
 import Details from './components/Details/';
+import Players from './components/Players/';
 import React from 'react';
 import {Button, View, Text} from 'react-native';
-import {StackNavigator} from 'react-navigation';
+import {DrawerNavigator} from 'react-navigation';
 
-const RootStack = StackNavigator({
+const RootStack = DrawerNavigator({
   Home: {
     screen: HomeScreen
   },
   Details: {
     screen: Details
+  },
+  Players: {
+    screen: Players
   }
-}, {initialRouteName: 'Home'});
+}, {
+  initialRouteName: 'Players',
+});
 
 export default class App extends React.Component {
   render() {
