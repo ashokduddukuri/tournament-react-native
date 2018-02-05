@@ -1,5 +1,4 @@
 // import HomeScreen from './components/HomeScreen';
-
 import HomeScreen from './components/HomeScreen/';
 import Details from './components/Details/';
 import Players from './components/Players/';
@@ -17,14 +16,20 @@ import {
 import { Provider, connect } from 'react-redux';
 import React from 'react';
 import { Font } from 'expo';
-import Expo from 'expo';
+import * as firebase from 'firebase';
+// import dotenv from 'dotenv';
+//
+// dotenv.config();
 
-console.log("PLATFORM", Expo.Constants.platform.ios);
-if(Expo.Constants.platform.ios) {
-  const AppFont = 'Cochin';
-} else {
-  const AppFont = 'Roboto';
-}
+const config = {
+    apiKey: "AIzaSyAyY9OHJZBCDDEu5AkIJFIwZf9AeDolqfQ",
+    authDomain: "tournament-app-28b60.firebaseapp.com",
+    databaseURL: "https://tournament-app-28b60.firebaseio.com",
+    projectId: "tournament-app-28b60",
+    storageBucket: "tournament-app-28b60.appspot.com",
+    messagingSenderId: "189928823901"
+  };
+firebase.initializeApp(config);
 
 const AppNavigator = DrawerNavigator({
   Players: {

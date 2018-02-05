@@ -1,8 +1,8 @@
 import React from 'react';
 import {FlatList, Button, View, Text, Image, StyleSheet} from 'react-native';
 import {StackNavigator} from 'react-navigation';
-import * as firebase from 'firebase';
 import { connect } from 'react-redux';
+import * as firebase from 'firebase';
 import { NavigationActions } from 'react-navigation';
 import PlayerItem from './PlayerItem/';
 import BurgerMenuBtn from './../BurgerMenuBtn/';
@@ -14,15 +14,6 @@ if(Expo.Constants.platform.ios) {
 } else {
   const AppFont = 'Roboto';
 }
-const config = {
-    apiKey: "AIzaSyAyY9OHJZBCDDEu5AkIJFIwZf9AeDolqfQ",
-    authDomain: "tournament-app-28b60.firebaseapp.com",
-    databaseURL: "https://tournament-app-28b60.firebaseio.com",
-    projectId: "tournament-app-28b60",
-    storageBucket: "tournament-app-28b60.appspot.com",
-    messagingSenderId: "189928823901"
-  };
-firebase.initializeApp(config);
 
 const styles = StyleSheet.create({
   baseView: {
@@ -103,14 +94,15 @@ export default class Players extends React.Component {
 
   renderPlayers = () => {
     if(this.state.playerDetails) {
+      console.log(this.state.playerDetails);
       const dataToRender = this.state.playerDetails.map((player, index) => {
-          return {
-            key : index,
-            name: player.name,
-            gender: player.gender,
-          };
+        return {
+          key : index,
+          name: player.name,
+        };
       });
-      // this.startLiveReloading();
+
+      console.log(dataToRender);
       return (
         <FlatList
           data={dataToRender}
