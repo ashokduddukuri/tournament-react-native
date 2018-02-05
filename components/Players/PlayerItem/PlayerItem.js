@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#bbdefb',
     borderBottomRightRadius: 40,
     borderTopLeftRadius: 40,
+    alignItems: 'center',
   },
   name: {
     // fontFamily: 'Cochin',
@@ -37,8 +38,18 @@ export default class PlayerItem extends React.PureComponent {
   render() {
     return (
       <View style={styles.baseView}>
+        {this.props.player.imageUrl ?
+          <Image
+            style={{width: 50, height: 50, borderRadius: 20}}
+            source={{uri: this.props.player.imageUrl}}
+            />
+          :
+          <Image
+            style={{width: 50, height: 50, borderRadius: 20}}
+            source={require('./profile.png')}
+            />
+        }
         <Text style={styles.name}>{this.props.player.name}</Text>
-        <Text style={styles.gender}>{this.props.player.gender}</Text>
       </View>
     );
   }

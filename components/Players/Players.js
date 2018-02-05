@@ -99,6 +99,7 @@ export default class Players extends React.Component {
         return {
           key : index,
           name: player.name,
+          imageUrl: player.imageUrl
         };
       });
 
@@ -120,7 +121,7 @@ export default class Players extends React.Component {
             <BurgerMenuBtn {...this.props} style={{flex: 0.3}}/>
             <Text style={styles.titleText}> {this.state.titleText}</Text>
         </View>
-        <View style={{flex: 0.9}}>
+        <View style={{flex: 0.95}}>
           {this.renderPlayers()}
         </View>
       </View>
