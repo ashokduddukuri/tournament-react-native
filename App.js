@@ -17,19 +17,19 @@ import { Provider, connect } from 'react-redux';
 import React from 'react';
 import { Font } from 'expo';
 import * as firebase from 'firebase';
-// import dotenv from 'dotenv';
-//
-// dotenv.config();
+import config from './config';
 
-const config = {
-    apiKey: "AIzaSyAyY9OHJZBCDDEu5AkIJFIwZf9AeDolqfQ",
-    authDomain: "tournament-app-28b60.firebaseapp.com",
-    databaseURL: "https://tournament-app-28b60.firebaseio.com",
-    projectId: "tournament-app-28b60",
-    storageBucket: "tournament-app-28b60.appspot.com",
-    messagingSenderId: "189928823901"
+console.log(config);
+
+const firebasConfig = {
+    apiKey: config.FIREBASE_API_KEY,
+    authDomain: config.FIREBASE_AUTH_DOMAIN,
+    databaseURL: config.FIREBASE_DATABASE_URL,
+    projectId: config.FIREBASE_PROJECT_ID,
+    storageBucket: config.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: config.FIREBASE_SENDER_ID,
   };
-firebase.initializeApp(config);
+firebase.initializeApp(firebasConfig);
 
 const AppNavigator = DrawerNavigator({
   Players: {

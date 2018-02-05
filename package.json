@@ -19,7 +19,6 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "dotenv": "^5.0.0",
     "expo": "^25.0.0",
     "firebase": "^4.9.1",
     "react": "16.2.0",
