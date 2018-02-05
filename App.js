@@ -3,16 +3,7 @@ import HomeScreen from './components/HomeScreen/';
 import Details from './components/Details/';
 import Players from './components/Players/';
 import {Button, View, Text} from 'react-native';
-import {DrawerNavigator, addNavigationHelpers} from 'react-navigation';
-import {
-  createStore,
-  applyMiddleware,
-  combineReducers,
-} from 'redux';
-import {
-  createReduxBoundAddListener,
-  createReactNavigationReduxMiddleware,
-} from 'react-navigation-redux-helpers';
+import {DrawerNavigator} from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import React from 'react';
 import { Font } from 'expo';
@@ -51,54 +42,24 @@ const AppNavigator = DrawerNavigator({
   }
 });
 
-const initialState = AppNavigator.router.getStateForAction(AppNavigator.router.getActionForPathAndParams('Players'));
-
-const navReducer = (state = initialState, action) => {
-  const nextState = AppNavigator.router.getStateForAction(action, state);
-
-  // Simply return the original `state` if `nextState` is null or undefined.
-  return nextState || state;
-};
-const appReducer = combineReducers({
-  nav: navReducer,
+const RootStack = DrawerNavigator({
+  // Home: {
+  //    screen: HomeScreen
+  //  },
+  //  Details: {
+  //    screen: Details
+  // },
+  Players: {
+    screen: Players
+   }
+ }, {
+  initialRouteName: 'Players',
 });
 
-const middleware = createReactNavigationReduxMiddleware(
-  "root",
-  state => state.nav,
-);
-const addListener = createReduxBoundAddListener("root");
-
-
-class App extends React.Component {
+export default class App extends React.Component {
   render() {
     return (
-      <AppNavigator navigation={addNavigationHelpers({
-        dispatch: this.props.dispatch,
-        state: this.props.nav,
-        addListener,
-      })} />
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({
-  nav: state.nav
-});
-
-const AppWithNavigationState = connect(mapStateToProps)(App);
-
-const store = createStore(
-  appReducer,
-  applyMiddleware(middleware),
-);
-
-export default class Root extends React.Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <AppWithNavigationState />
-      </Provider>
+      <RootStack />
     );
   }
 }
