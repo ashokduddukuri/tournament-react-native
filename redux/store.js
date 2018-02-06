@@ -1,19 +1,17 @@
-import {createStore, compose/* , applyMiddleware*/} from 'redux';
-// import someReduxMiddleware from 'some-redux-middleware';
-// import someOtherReduxMiddleware from 'some-other-redux-middleware';
+import {createStore} from 'redux';
+import {persistStore, persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import rootReducer from './reducers/root.reducer';
 
-const enhancerList = [];
-const devToolsExtension = window && window.__REDUX_DEVTOOLS_EXTENSION__;
+const persistConfig = {
+  key: 'root',
+  storage
+};
 
-if (typeof devToolsExtension === 'function') {
-  enhancerList.push(devToolsExtension());
-}
-
-const composedEnhancer = compose(/* applyMiddleware(someReduxMiddleware, someOtherReduxMiddleware),*/ ...enhancerList);
-
-const initStore = () => createStore(rootReducer, {}, composedEnhancer);
-
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+let store = createStore(persistedReducer);
+let persistor = persistStore(store);
 module.exports = {
-  initStore
+  store,
+  persistor
 };
