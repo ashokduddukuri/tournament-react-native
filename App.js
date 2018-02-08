@@ -2,6 +2,7 @@
 import HomeScreen from './components/HomeScreen/';
 import Details from './components/Details/';
 import Players from './components/Players/';
+import PlayerInfo from './components/PlayerInfo/';
 import Login from './components/Login';
 import {Button, View, Text} from 'react-native';
 import {DrawerNavigator} from 'react-navigation';
@@ -29,6 +30,9 @@ const RootStack = DrawerNavigator({
   },
   Players: {
     screen: Players
+  },
+  PlayerInfo: {
+    screen: PlayerInfo
   }
 }, {initialRouteName: 'Login'});
 

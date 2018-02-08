@@ -16,7 +16,7 @@ class Login extends React.Component {
                     .Google
                     .logInAsync({
                         androidClientId: Config.ANDRIOD_CLIENT_ID,
-                        // iosClientId: YOUR_CLIENT_ID_HERE,
+                        iosClientId: Config.IOS_CLIENT_ID,
                         scopes: ['profile', 'email']
                     });
                 console.log(result);
@@ -27,7 +27,7 @@ class Login extends React.Component {
                     this
                         .props
                         .navigation
-                        .navigate('Players');
+                        .navigate('PlayerInfo');
                     return result.accessToken;
                 } else {
                     return {cancelled: true};
