@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-console.log('here', this.props);
+// console.log('here', this.props);
 export default class PlayerItem extends React.PureComponent {
 
   _renderItem = ({item}) => {

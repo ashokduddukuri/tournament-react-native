@@ -2,7 +2,7 @@
 import HomeScreen from './components/HomeScreen/';
 import Details from './components/Details/';
 import Players from './components/Players/';
-import PlayerInfo from './components/PlayerInfo/';
+import Bidding from './components/PlayerInfo/';
 import Login from './components/Login';
 import {Button, View, Text} from 'react-native';
 import {DrawerNavigator} from 'react-navigation';
@@ -31,10 +31,21 @@ const RootStack = DrawerNavigator({
   Players: {
     screen: Players
   },
-  PlayerInfo: {
-    screen: PlayerInfo
+  Bidding: {
+    screen: Bidding
   }
-}, {initialRouteName: 'Login'});
+}, {
+  initialRouteName: 'Login',
+  // navigationOptions: {
+  //     headerStyle: {
+  //       backgroundColor: '#f4511e',
+  //     },
+  //     headerTintColor: '#fff',
+  //     headerTitleStyle: {
+  //       fontWeight: 'bold',
+  //     },
+  //   },
+});
 
 export default class App extends React.Component {
   render() {

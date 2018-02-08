@@ -1,12 +1,17 @@
 import React from 'react';
 import {
   FlatList,
+  SectionList,
   Button,
   View,
   Text,
   Image,
-  StyleSheet
+  StyleSheet,
+  ImageBackground
 } from 'react-native';
+import Header from './Header';
+import HeaderWithMenu from './../HeaderWithMenu';
+import {List} from 'react-native-elements';
 import {StackNavigator} from 'react-navigation';
 import {connect} from 'react-redux';
 import * as firebase from 'firebase';
@@ -16,7 +21,7 @@ import BurgerMenuBtn from './../BurgerMenuBtn/';
 // import {Provider, connect} from 'react-redux'
 import Expo from 'expo';
 
-console.log("PLATFORM", Expo.Constants.platform.ios);
+// console.log("PLATFORM", Expo.Constants.platform.ios);
 if (Expo.Constants.platform.ios) {
   const AppFont = 'Cochin';
 } else {
@@ -25,9 +30,9 @@ if (Expo.Constants.platform.ios) {
 
 const styles = StyleSheet.create({
   baseView: {
-    paddingTop: 20,
-    flex: 1,
-    flexDirection: 'column'
+    // paddingTop: 20,
+    // flex: 1,
+    // flexDirection: 'column'
   },
   header: {
     paddingTop: 10,
@@ -40,7 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#64b5f6'
   },
   icon: {
-    width: 26,
+    width: 18,
     height: 26
   },
   baseText: {
@@ -65,7 +70,7 @@ class PlayerInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      titleText: "Player Info",
+      titleText: "Bidding",
       bodyText: 'Here is the list of players',
       playerDetails: null,
       tournamentDetails: null,
@@ -75,9 +80,9 @@ class PlayerInfo extends React.Component {
   }
 
   static navigationOptions = {
-    drawerLabel: 'Player Info',
+    drawerLabel: 'Bidding',
     fontSize: 20,
-    drawerIcon: ({tintColor}) => (<Image source={require('./../Players/player.png')} style={[styles.icon]}/>)
+    drawerIcon: ({tintColor}) => (<Image source={require('./bid.png')} style={[styles.icon]}/>)
   }
 
   componentDidMount() {
@@ -95,59 +100,19 @@ class PlayerInfo extends React.Component {
   }
 
   _renderItem = ({item}) => {
-    console.log("ITEM: ", item);
+    // console.log("ITEM: ", item);
     return (<PlayerItem player={item}/>);
   }
 
-  // getPlayerRating = () => {
-  //   // console.log('PLAYER DATA', this.state.playerDetails);
-  //   this.state.playerDetails.sports[this.state.currentSportId].rating;
-  // }
+  renderCurrentRoundPlayerInfo = (sectionListData) => {
+    // console.log("REnDING", sectionListData);
+    return (<SectionList
+              renderItem={this._renderItem}
+              renderSectionHeader={({section}) => <Header title={section.title} />}
+              sections={sectionListData}
 
-  renderPlayerInfo = () => {
-    if (this.state.playerDetails) {
-      // console.log("TOURNAMENT", this.state.tournamentDetails[this.state.currentTournamentId]);
-      var tournamentData = this.state.tournamentDetails[this.state.currentTournamentId];
-      const dataToRender = this
-        .state
-        .playerDetails
-        .map((player, index) => {
-          //if player is playing inthis tournament
-          if(player && tournamentData.biddingInfo.players[player.id]) {
-            // console.log(tournamentData.biddingInfo.players[10], player.id);
-            // if(tournamentData.biddingInfo.players[player.id])
-            const roundId = tournamentData.biddingInfo.players[player.id].roundId;
-            const categoryName = tournamentData.biddingInfo.roundsInfo[roundId].name;
-            const baseAmount = tournamentData.biddingInfo.roundsInfo[roundId].baseValue;
-            const denomination = tournamentData.biddingInfo.denomination;
-            const soldValue = tournamentData.biddingInfo.players[player.id].soldValue;
-
-            return {
-              key: index,
-              name: player.name,
-              imageUrl: player.imageUrl,
-              rating: player.sports[this.state.currentSportId].rating || 'Unseeded',
-              prevBidValue: player.sports[this.state.currentSportId].prevBidValue || 'NA',
-              roundId: roundId,
-              categoryName: categoryName,
-              baseAmount: baseAmount,
-              denomination: denomination,
-              soldValue: soldValue
-            };
-          }
-        });
-      dataToRender = dataToRender.filter((pd) => {
-        return !!pd;
-      });
-      console.log("DATA", dataToRender);
-      return (<FlatList data={dataToRender} renderItem={this._renderItem}/>);
-    }
-    return <Text>Fetching data...</Text>;
-  }
-
-  renderCurrentRoundPlayerInfo = (players) => {
-    console.log("REnDING", players);
-    return (<FlatList data={players} renderItem={this._renderItem}/>);
+              />
+          );
   }
 
   sanitizePlayerDetails = () => {
@@ -197,56 +162,81 @@ class PlayerInfo extends React.Component {
     });
 
     //Bad code to adjsut all players on one scroll view
-    var r1 = players.filter((player) => {
-      return player.roundId == 1;
-    });
+    // var r1 = players.filter((player) => {
+    //   return player.roundId == 1;
+    // });
+    //
+    // var r2 = players.filter((player) => {
+    //   return player.roundId == 2;
+    // });
+    // var r3 = players.filter((player) => {
+    //   return player.roundId == 3;
+    // });
+    // var r4 = players.filter((player) => {
+    //   return player.roundId == 4;
+    // });
 
-    var r2 = players.filter((player) => {
-      return player.roundId == 2;
-    });
-    var r3 = players.filter((player) => {
-      return player.roundId == 3;
-    });
-    var r4 = players.filter((player) => {
-      return player.roundId == 4;
-    });
+    // var combinedPlayers = currentRoundPlayers.concat(r1,r2, r3, r4);
 
-    var combinedPlayers = currentRoundPlayers.concat(r1,r2, r3, r4);
-
-    return this.renderCurrentRoundPlayerInfo(combinedPlayers);
+    return (this.renderCurrentRoundPlayerInfo(currentRoundPlayers));
   }
 
   renderRounds = () => {
+    const players = this.sanitizePlayerDetails();
+    const sectionListData = [];
+    for(var i = 0; i < 5; i++) {
+      const currentRoundPlayers = players.filter((player) => {
+        return player.roundId == i;
+      });
+      const roundTitle = currentRoundPlayers[0].categoryName;
+      sectionListData.push({data: currentRoundPlayers, title: roundTitle});
+    }
+
     return (
       <View>
-        {this.renderPlayerRoundWiseInfo(0)}
+        {this.renderCurrentRoundPlayerInfo(sectionListData)}
       </View>
     )
   }
 
 
+  // <BurgerMenuBtn {...this.props} style={{
+  //     flex: 0.3
+  //   }}/>
   render() {
     return (
-      <View style={styles.baseView}>
-        <View style={styles.header}>
-          <BurgerMenuBtn {...this.props} style={{
-            flex: 0.3
-          }}/>
-          <Text style={styles.titleText}>
-            {this.state.titleText}</Text>
-        </View>
-        <View style={{
-          flex: 0.95
-        }}>
-        {this.state.playerDetails ?
-          this.renderPlayerRoundWiseInfo(0)
-          : <Text>Fetching data...</Text>
-        }
-        </View>
-      </View>
+      <ImageBackground
+            style={{
+              backgroundColor: '#fff',
+              flex: 1,
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center',
+            }}
+            source={require('./../bg.jpg')}
+          >
+          <View style={{flex: 1}}>
+            <HeaderWithMenu style={{flex:0.05}} {...this.props} title={this.state.titleText} />
+            <View style={{flex: 1}}>
+              {this.state.playerDetails ?
+                this.renderRounds()
+                : <Text>Fetching data...</Text>
+              }
+            </View>
+          </View>
+        </ImageBackground>
     );
   }
 }
+// {this.state.playerDetails ?
+//   this.renderPlayerRoundWiseInfo(1)
+//   : <Text>Fetching data...</Text>
+// }
+// {this.state.playerDetails ?
+//   this.renderPlayerRoundWiseInfo(2)
+//   : <Text>Fetching data...</Text>
+// }
 // {this.state.playerDetails ?
 //   this.renderPlayerRoundWiseInfo(2)
 //   : null
@@ -263,7 +253,7 @@ class PlayerInfo extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   // provide only one notification at a time
-  console.log("players", state)
+  // console.log("players", state)
   return {"As": "AS"};
 };
 // console.log(addGInfo);

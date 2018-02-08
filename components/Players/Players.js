@@ -13,10 +13,10 @@ import * as firebase from 'firebase';
 import {NavigationActions} from 'react-navigation';
 import PlayerItem from './PlayerItem/';
 import BurgerMenuBtn from './../BurgerMenuBtn/';
-// import {Provider, connect} from 'react-redux'
+import HeaderWithMenu from './../HeaderWithMenu';
 import Expo from 'expo';
 
-console.log("PLATFORM", Expo.Constants.platform.ios);
+// console.log("PLATFORM", Expo.Constants.platform.ios);
 if (Expo.Constants.platform.ios) {
   const AppFont = 'Cochin';
 } else {
@@ -25,7 +25,6 @@ if (Expo.Constants.platform.ios) {
 
 const styles = StyleSheet.create({
   baseView: {
-    paddingTop: 20,
     flex: 1,
     flexDirection: 'column'
   },
@@ -118,13 +117,7 @@ class Players extends React.Component {
   render() {
     return (
       <View style={styles.baseView}>
-        <View style={styles.header}>
-          <BurgerMenuBtn {...this.props} style={{
-            flex: 0.3
-          }}/>
-          <Text style={styles.titleText}>
-            {this.state.titleText}</Text>
-        </View>
+        <HeaderWithMenu style={{flex:0.05}} {...this.props} title={this.state.titleText} />
         <View style={{
           flex: 0.95
         }}>
@@ -137,7 +130,7 @@ class Players extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   // provide only one notification at a time
-  console.log("players", state)
+  // console.log("players", state)
   return {"As": "AS"};
 };
 // console.log(addGInfo);

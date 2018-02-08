@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, View, Text} from 'react-native';
+import {Button, View, Text, ImageBackground, Image} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import Config from './../../config';
 import addGInfo from './../../redux/actions/user';
@@ -7,6 +7,11 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 class Login extends React.Component {
+    static navigationOptions = {
+      drawerLabel: 'Login',
+      fontSize: 20,
+      drawerIcon: ({tintColor}) => (<Image source={require('./login.jpeg')} style={{width: 20, height: 26}}/>)
+    }
 
     componentDidMount() {
         var self = this;
@@ -19,7 +24,6 @@ class Login extends React.Component {
                         iosClientId: Config.IOS_CLIENT_ID,
                         scopes: ['profile', 'email']
                     });
-                console.log(result);
                 if (result.type === 'success') {
                     self
                         .props
@@ -27,7 +31,7 @@ class Login extends React.Component {
                     this
                         .props
                         .navigation
-                        .navigate('PlayerInfo');
+                        .navigate('Bidding');
                     return result.accessToken;
                 } else {
                     return {cancelled: true};
@@ -39,24 +43,46 @@ class Login extends React.Component {
         }
     }
 
+    navigateToBidding = () => {
+      console.log("NAVIGATING");
+      this.props.navigation.navigate('Bidding');
+    }
+
     render() {
-        return (
-            <View
-                style={{
+      console.log("InLogin",this.props);
+        return (<ImageBackground
+              style={{
+                backgroundColor: '#fff',
                 flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-                <Text>Details Screen</Text>
-                <Button title="Login with Goolge" onPress={() => this.logFunc()}/>
-            </View>
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+              }}
+              source={require('./../bg.jpg')}
+            >
+              <View
+                  style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+              }}>
+                  <Text style={{fontSize:40, fontWeight: 'bold', textAlign: 'right', paddingRight: 20}}>
+                    Knolskape Badminton League
+                  </Text>
+                  {this.props.state.user.payload?
+                    this.navigateToBidding()
+                    :<Button title="Login with Goolge" onPress={() => this.logFunc()}/>
+                  }
+              </View>
+            </ImageBackground>
         );
     }
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state);
-    return {};
+    // console.log("State",state);
+    return {state};
 };
 // console.log(addGInfo);
 function mapDispatchToProps(dispatch) {
