@@ -11,22 +11,14 @@ import {
 } from 'react-native';
 import Header from './Header';
 import HeaderWithMenu from './../HeaderWithMenu';
-import {List} from 'react-native-elements';
-import {StackNavigator} from 'react-navigation';
-import {connect} from 'react-redux';
+import { List } from 'react-native-elements';
+import { StackNavigator } from 'react-navigation';
+import { connect } from 'react-redux';
 import * as firebase from 'firebase';
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import PlayerItem from './PlayerBidItem/';
 import BurgerMenuBtn from './../BurgerMenuBtn/';
-// import {Provider, connect} from 'react-redux'
 import Expo from 'expo';
-
-// console.log("PLATFORM", Expo.Constants.platform.ios);
-if (Expo.Constants.platform.ios) {
-  const AppFont = 'Cochin';
-} else {
-  const AppFont = 'Roboto';
-}
 
 const styles = StyleSheet.create({
   baseView: {
@@ -79,12 +71,6 @@ class PlayerInfo extends React.Component {
     };
   }
 
-  static navigationOptions = {
-    drawerLabel: 'Bidding',
-    fontSize: 20,
-    drawerIcon: ({tintColor}) => (<Image source={require('./bid.png')} style={[styles.icon]}/>)
-  }
-
   componentDidMount() {
     firebase
       .database()
@@ -92,27 +78,27 @@ class PlayerInfo extends React.Component {
       .on('value', (snapshot) => {
         var data = snapshot.val();
         // console.log("APP DATA", data);
-        this.setState({currentSportId: 1});
-        this.setState({currentTournamentId: 1});
-        this.setState({tournamentDetails: data.tournaments});
-        this.setState({playerDetails: data.users});
+        this.setState({ currentSportId: 1 });
+        this.setState({ currentTournamentId: 1 });
+        this.setState({ tournamentDetails: data.tournaments });
+        this.setState({ playerDetails: data.users });
       });
   }
 
-  _renderItem = ({item}) => {
+  _renderItem = ({ item }) => {
     // console.log("ITEM: ", item);
-    return (<PlayerItem player={item}/>);
+    return (<PlayerItem player={item} />);
   }
 
   renderCurrentRoundPlayerInfo = (sectionListData) => {
     // console.log("REnDING", sectionListData);
     return (<SectionList
-              renderItem={this._renderItem}
-              renderSectionHeader={({section}) => <Header title={section.title} />}
-              sections={sectionListData}
+      renderItem={this._renderItem}
+      renderSectionHeader={({ section }) => <Header title={section.title} />}
+      sections={sectionListData}
 
-              />
-          );
+    />
+    );
   }
 
   /**
@@ -127,7 +113,7 @@ class PlayerInfo extends React.Component {
       .playerDetails
       .map((player, index) => {
         //if player is playing inthis tournament
-        if(player && tournamentData.biddingInfo.players[player.id]) {
+        if (player && tournamentData.biddingInfo.players[player.id]) {
           // console.log(tournamentData.biddingInfo.players[10], player.id);
           // if(tournamentData.biddingInfo.players[player.id])
           const roundId = tournamentData.biddingInfo.players[player.id].roundId;
@@ -151,11 +137,11 @@ class PlayerInfo extends React.Component {
         }
       });
 
-      // to remove undefined values that firebase throws
-      dataToRender = dataToRender.filter((pd) => {
-        return !!pd;
-      });
-      return dataToRender;
+    // to remove undefined values that firebase throws
+    dataToRender = dataToRender.filter((pd) => {
+      return !!pd;
+    });
+    return dataToRender;
   }
 
   renderRounds = () => {
@@ -165,12 +151,12 @@ class PlayerInfo extends React.Component {
     const roundsCount = tournamentData.biddingInfo.roundsInfo.length;
 
 
-    for(var i = 0; i < roundsCount; i++) {
+    for (var i = 0; i < roundsCount; i++) {
       const currentRoundPlayers = players.filter((player) => {
         return player.roundId == i;
       });
       const roundTitle = currentRoundPlayers[0].categoryName;
-      sectionListData.push({data: currentRoundPlayers, title: roundTitle});
+      sectionListData.push({ data: currentRoundPlayers, title: roundTitle });
     }
 
     return (
@@ -182,27 +168,15 @@ class PlayerInfo extends React.Component {
 
   render() {
     return (
-      <ImageBackground
-            style={{
-              backgroundColor: '#fff',
-              flex: 1,
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-            }}
-            source={require('./../bg1.jpg')}
-          >
-          <View style={{flex: 1}}>
-            <HeaderWithMenu style={{flex:0.05}} {...this.props} title={this.state.titleText} />
-            <View style={{flex: 1}}>
-              {this.state.playerDetails ?
-                this.renderRounds()
-                : <Text>Fetching data...</Text>
-              }
-            </View>
-          </View>
-        </ImageBackground>
+      <View style={{ flex: 1 }}>
+        <HeaderWithMenu style={{ flex: 0.05 }} {...this.props} title={this.state.titleText} />
+        <View style={{ flex: 1 }}>
+          {this.state.playerDetails ?
+            this.renderRounds()
+            : <Text>Fetching data...</Text>
+          }
+        </View>
+      </View>
     );
   }
 }
@@ -210,7 +184,7 @@ class PlayerInfo extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   // provide only one notification at a time
   // console.log("players", state)
-  return {"As": "AS"};
+  return { "As": "AS" };
 };
 // console.log(addGInfo);
 function mapDispatchToProps(dispatch) {

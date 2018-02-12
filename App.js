@@ -3,16 +3,17 @@ import HomeScreen from './components/HomeScreen/';
 import Details from './components/Details/';
 import Players from './components/Players/';
 import Bidding from './components/PlayerInfo/';
-import Login from './components/Login';
-import {Button, View, Text} from 'react-native';
-import {DrawerNavigator} from 'react-navigation';
-import {Provider, connect} from 'react-redux';
+import Home from './components/Login';
+import { DrawerNavigator } from 'react-navigation';
+import { Provider, connect } from 'react-redux';
 import React from 'react';
-import {Font} from 'expo';
 import * as firebase from 'firebase';
 import config from './config';
-import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from './redux/store.js';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './redux/store.js';
+import * as Expo from "expo";
+import SideBar from "./components/Sidebar";
+
 
 const firebasConfig = {
   apiKey: config.FIREBASE_API_KEY,
@@ -25,8 +26,8 @@ const firebasConfig = {
 firebase.initializeApp(firebasConfig);
 
 const RootStack = DrawerNavigator({
-  Login: {
-    screen: Login
+  Home: {
+    screen: Home
   },
   Players: {
     screen: Players
@@ -35,25 +36,42 @@ const RootStack = DrawerNavigator({
     screen: Bidding
   }
 }, {
-  initialRouteName: 'Login',
-  // navigationOptions: {
-  //     headerStyle: {
-  //       backgroundColor: '#f4511e',
-  //     },
-  //     headerTintColor: '#fff',
-  //     headerTitleStyle: {
-  //       fontWeight: 'bold',
-  //     },
-  //   },
-});
+    initialRouteName: 'Home',
+    contentOptions: {
+      activeTintColor: "#e91e63"
+    },
+    contentComponent: props => <SideBar {...props} />
+  });
 
 export default class App extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      isReady: false
+    };
+  }
+  componentWillMount() {
+    this.loadFonts();
+  }
+  async loadFonts() {
+    await Expo.Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf")
+    });
+    this.setState({ isReady: true });
+  }
+
   render() {
+    if (!this.state.isReady) {
+      return <Expo.AppLoading />;
+    }
 
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <RootStack/>
+          <RootStack />
         </PersistGate>
       </Provider>
     );

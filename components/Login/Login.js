@@ -57,7 +57,7 @@ class Login extends React.Component {
                 height: '100%',
                 justifyContent: 'center',
               }}
-              source={require('./../bg1.jpg')}
+              source={require('./../../assets/images/bg1.jpg')}
             >
               <View
                   style={{

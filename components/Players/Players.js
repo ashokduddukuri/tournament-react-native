@@ -16,46 +16,10 @@ import BurgerMenuBtn from './../BurgerMenuBtn/';
 import HeaderWithMenu from './../HeaderWithMenu';
 import Expo from 'expo';
 
-// console.log("PLATFORM", Expo.Constants.platform.ios);
-if (Expo.Constants.platform.ios) {
-  const AppFont = 'Cochin';
-} else {
-  const AppFont = 'Roboto';
-}
-
 const styles = StyleSheet.create({
   baseView: {
     flex: 1,
     flexDirection: 'column'
-  },
-  header: {
-    paddingTop: 10,
-    // paddingBottom: 10,
-    paddingLeft: 10,
-    height: 70,
-    flex: 0.05,
-    flexDirection: 'row',
-    height: 50,
-    backgroundColor: '#64b5f6'
-  },
-  icon: {
-    width: 26,
-    height: 26
-  },
-  baseText: {
-    // fontFamily: Expo.Constants.platform.ios ? 'Cochin', 'Roboto',
-  },
-  titleText: {
-    flex: 0.7,
-    // fontFamily: Expo.Constants.platform.ios ? 'Cochin', 'Roboto',
-    paddingLeft: 10,
-    fontSize: 25,
-    lineHeight: 25,
-    fontWeight: 'bold',
-    color: '#004d40'
-  },
-  menu: {
-    top: 20
   }
 });
 
@@ -70,23 +34,6 @@ class Players extends React.Component {
     };
   }
 
-  static navigationOptions = {
-    drawerLabel: 'Players',
-    fontSize: 20,
-    drawerIcon: ({tintColor}) => (<Image source={require('./player.png')} style={[styles.icon]}/>)
-  }
-
-  getPlayerData = () => {
-    const fbData = firebase
-      .database()
-      .ref('/users')
-      .once('value')
-      .then((snapshot) => {
-        var users = snapshot.val();
-        this.setState({playerDetails: users})
-      });
-    return fbData;
-  }
   componentDidMount() {
     firebase
       .database()

@@ -1,20 +1,26 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import { Text, View } from 'react-native';
+import { Separator } from 'native-base';
 
 
 export default class Header extends React.Component {
   render() {
     return (
-      <View
-        style={{height: 30,
-          backgroundColor: '#ECE0B8',
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
+      <Separator bordered>
         <Text>{this.props.title}</Text>
-      </View>
+      </Separator>
     )
   }
 }
+
+{/* <View
+  style={{
+    height: 30,
+    backgroundColor: '#ECE0B8',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}
+>
+  <Text>{this.props.title}</Text>
+</View> */}
