@@ -44,12 +44,10 @@ class Login extends React.Component {
     }
 
     navigateToBidding = () => {
-      console.log("NAVIGATING");
       this.props.navigation.navigate('Bidding');
     }
 
     render() {
-      console.log("InLogin",this.props);
         return (<ImageBackground
               style={{
                 backgroundColor: '#fff',
@@ -59,7 +57,7 @@ class Login extends React.Component {
                 height: '100%',
                 justifyContent: 'center',
               }}
-              source={require('./../bg.jpg')}
+              source={require('./../bg1.jpg')}
             >
               <View
                   style={{
@@ -68,11 +66,11 @@ class Login extends React.Component {
                   justifyContent: 'center'
               }}>
                   <Text style={{fontSize:40, fontWeight: 'bold', textAlign: 'right', paddingRight: 20}}>
-                    Knolskape Badminton League
+                    KNOLSKAPE Badminton League
                   </Text>
-                  {this.props.state.user.payload?
+                  {this.props.user.payload?
                     this.navigateToBidding()
-                    :<Button title="Login with Goolge" onPress={() => this.logFunc()}/>
+                    :<Button title="Login with Google" onPress={() => this.logFunc()}/>
                   }
               </View>
             </ImageBackground>
@@ -82,7 +80,7 @@ class Login extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     // console.log("State",state);
-    return {state};
+    return {user: state.user};
 };
 // console.log(addGInfo);
 function mapDispatchToProps(dispatch) {

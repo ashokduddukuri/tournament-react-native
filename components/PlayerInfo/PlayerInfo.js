@@ -115,6 +115,10 @@ class PlayerInfo extends React.Component {
           );
   }
 
+  /**
+   * [sanitizePlayerDetails description]
+   * @return {[array]} [filtering and fetching data from firebase]
+   */
   sanitizePlayerDetails = () => {
     var tournamentData = this.state.tournamentDetails[this.state.currentTournamentId];
 
@@ -146,45 +150,22 @@ class PlayerInfo extends React.Component {
           };
         }
       });
+
+      // to remove undefined values that firebase throws
       dataToRender = dataToRender.filter((pd) => {
         return !!pd;
       });
-      // console.log(dataToRender);
       return dataToRender;
-      // this.setState({playerDetails: dataToRender});
-  }
-
-  renderPlayerRoundWiseInfo = (id) => {
-    const players = this.sanitizePlayerDetails();
-
-    var currentRoundPlayers = players.filter((player) => {
-      return player.roundId == id;
-    });
-
-    //Bad code to adjsut all players on one scroll view
-    // var r1 = players.filter((player) => {
-    //   return player.roundId == 1;
-    // });
-    //
-    // var r2 = players.filter((player) => {
-    //   return player.roundId == 2;
-    // });
-    // var r3 = players.filter((player) => {
-    //   return player.roundId == 3;
-    // });
-    // var r4 = players.filter((player) => {
-    //   return player.roundId == 4;
-    // });
-
-    // var combinedPlayers = currentRoundPlayers.concat(r1,r2, r3, r4);
-
-    return (this.renderCurrentRoundPlayerInfo(currentRoundPlayers));
   }
 
   renderRounds = () => {
     const players = this.sanitizePlayerDetails();
     const sectionListData = [];
-    for(var i = 0; i < 5; i++) {
+    const tournamentData = this.state.tournamentDetails[this.state.currentTournamentId];
+    const roundsCount = tournamentData.biddingInfo.roundsInfo.length;
+
+
+    for(var i = 0; i < roundsCount; i++) {
       const currentRoundPlayers = players.filter((player) => {
         return player.roundId == i;
       });
@@ -199,10 +180,6 @@ class PlayerInfo extends React.Component {
     )
   }
 
-
-  // <BurgerMenuBtn {...this.props} style={{
-  //     flex: 0.3
-  //   }}/>
   render() {
     return (
       <ImageBackground
@@ -214,7 +191,7 @@ class PlayerInfo extends React.Component {
               height: '100%',
               justifyContent: 'center',
             }}
-            source={require('./../bg.jpg')}
+            source={require('./../bg1.jpg')}
           >
           <View style={{flex: 1}}>
             <HeaderWithMenu style={{flex:0.05}} {...this.props} title={this.state.titleText} />
@@ -229,27 +206,6 @@ class PlayerInfo extends React.Component {
     );
   }
 }
-// {this.state.playerDetails ?
-//   this.renderPlayerRoundWiseInfo(1)
-//   : <Text>Fetching data...</Text>
-// }
-// {this.state.playerDetails ?
-//   this.renderPlayerRoundWiseInfo(2)
-//   : <Text>Fetching data...</Text>
-// }
-// {this.state.playerDetails ?
-//   this.renderPlayerRoundWiseInfo(2)
-//   : null
-// }
-// {this.state.playerDetails ?
-//   this.renderPlayerRoundWiseInfo(3)
-//   : null
-// }
-// {this.state.playerDetails ?
-//   this.renderPlayerRoundWiseInfo(4)
-//   : null
-// }
-// {this.renderPlayerInfo()}
 
 const mapStateToProps = (state, ownProps) => {
   // provide only one notification at a time

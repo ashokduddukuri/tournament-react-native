@@ -65,9 +65,9 @@ export default class PlayerItem extends React.PureComponent {
         }
         <FlatList
           data={[{key: 0, name: player.name},
-          {key: 1, name: 'Base Amount: ' + player.baseAmount},
+          {key: 1, name: 'Base Amount: ' + player.baseAmount + " " + player.denomination},
           // {key: 2, name: 'Rating: ' + player.rating},
-          {key: 3, name: 'Prev. Bid: ' + player.prevBidValue},
+          {key: 3, name: 'Prev. Bid: ' + (player.prevBidValue == 'NA' ? player.prevBidValue : player.prevBidValue + " " + player.denomination)},
           {key: 4, name: 'Category: ' + player.categoryName},
         ]}
           renderItem={({item}) => <Text>{item.name}</Text>}

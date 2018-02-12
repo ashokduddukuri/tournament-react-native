@@ -119,7 +119,7 @@ class Players extends React.Component {
       <View style={styles.baseView}>
         <HeaderWithMenu style={{flex:0.05}} {...this.props} title={this.state.titleText} />
         <View style={{
-          flex: 0.95
+          flex: 1
         }}>
           {this.renderPlayers()}
         </View>
