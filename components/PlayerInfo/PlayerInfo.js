@@ -1,61 +1,15 @@
 import React from 'react';
 import {
-  FlatList,
   SectionList,
-  Button,
   View,
   Text,
-  Image,
-  StyleSheet,
-  ImageBackground
 } from 'react-native';
 import Header from './Header';
 import HeaderWithMenu from './../HeaderWithMenu';
-import { List } from 'react-native-elements';
-import { StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase';
-import { NavigationActions } from 'react-navigation';
 import PlayerItem from './PlayerBidItem/';
-import BurgerMenuBtn from './../BurgerMenuBtn/';
-import Expo from 'expo';
-
-const styles = StyleSheet.create({
-  baseView: {
-    // paddingTop: 20,
-    // flex: 1,
-    // flexDirection: 'column'
-  },
-  header: {
-    paddingTop: 10,
-    // paddingBottom: 10,
-    paddingLeft: 10,
-    height: 70,
-    flex: 0.05,
-    flexDirection: 'row',
-    height: 50,
-    backgroundColor: '#64b5f6'
-  },
-  icon: {
-    width: 18,
-    height: 26
-  },
-  baseText: {
-    // fontFamily: Expo.Constants.platform.ios ? 'Cochin', 'Roboto',
-  },
-  titleText: {
-    flex: 0.7,
-    // fontFamily: Expo.Constants.platform.ios ? 'Cochin', 'Roboto',
-    paddingLeft: 10,
-    fontSize: 25,
-    lineHeight: 25,
-    fontWeight: 'bold',
-    color: '#004d40'
-  },
-  menu: {
-    top: 20
-  }
-});
+import updateTournamentData from './../../redux/actions/tournament';
 
 class PlayerInfo extends React.Component {
 
@@ -64,25 +18,7 @@ class PlayerInfo extends React.Component {
     this.state = {
       titleText: "Bidding",
       bodyText: 'Here is the list of players',
-      playerDetails: null,
-      tournamentDetails: null,
-      currentSportId: null,
-      currentTournamentId: null
     };
-  }
-
-  componentDidMount() {
-    firebase
-      .database()
-      .ref('/')
-      .on('value', (snapshot) => {
-        var data = snapshot.val();
-        // console.log("APP DATA", data);
-        this.setState({ currentSportId: 1 });
-        this.setState({ currentTournamentId: 1 });
-        this.setState({ tournamentDetails: data.tournaments });
-        this.setState({ playerDetails: data.users });
-      });
   }
 
   _renderItem = ({ item }) => {
@@ -106,11 +42,12 @@ class PlayerInfo extends React.Component {
    * @return {[array]} [filtering and fetching data from firebase]
    */
   sanitizePlayerDetails = () => {
-    var tournamentData = this.state.tournamentDetails[this.state.currentTournamentId];
+    var tournamentData = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
 
     let dataToRender = this
-      .state
-      .playerDetails
+      .props
+      .tournament
+      .users
       .map((player, index) => {
         //if player is playing inthis tournament
         if (player && tournamentData.biddingInfo.players[player.id]) {
@@ -126,8 +63,8 @@ class PlayerInfo extends React.Component {
             key: index,
             name: player.name,
             imageUrl: player.imageUrl,
-            rating: player.sports[this.state.currentSportId].rating || 'Unseeded',
-            prevBidValue: player.sports[this.state.currentSportId].prevBidValue || 'NA',
+            rating: player.sports[this.props.tournament.currentSportId].rating || 'Unseeded',
+            prevBidValue: player.sports[this.props.tournament.currentSportId].prevBidValue || 'NA',
             roundId: roundId,
             categoryName: categoryName,
             baseAmount: baseAmount,
@@ -147,7 +84,7 @@ class PlayerInfo extends React.Component {
   renderRounds = () => {
     const players = this.sanitizePlayerDetails();
     const sectionListData = [];
-    const tournamentData = this.state.tournamentDetails[this.state.currentTournamentId];
+    const tournamentData = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
     const roundsCount = tournamentData.biddingInfo.roundsInfo.length;
 
 
@@ -167,11 +104,13 @@ class PlayerInfo extends React.Component {
   }
 
   render() {
+    console.log("DATA FROM REDUCER: ", this.props.tournament.users);
+    
     return (
       <View style={{ flex: 1 }}>
         <HeaderWithMenu style={{ flex: 0.05 }} {...this.props} title={this.state.titleText} />
         <View style={{ flex: 1 }}>
-          {this.state.playerDetails ?
+          {this.props.tournament.users ?
             this.renderRounds()
             : <Text>Fetching data...</Text>
           }
@@ -182,16 +121,10 @@ class PlayerInfo extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // provide only one notification at a time
-  // console.log("players", state)
-  return { "As": "AS" };
+  return { 
+    tournament: state.tournament,
+    user: state.user
+  };
 };
-// console.log(addGInfo);
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({
-      addGInfo
-    }, dispatch)
-  }
-}
+
 export default connect(mapStateToProps, null)(PlayerInfo);

@@ -1,9 +1,10 @@
 // import HomeScreen from './components/HomeScreen';
 import HomeScreen from './components/HomeScreen/';
-import Details from './components/Details/';
-import Players from './components/Players/';
-import Bidding from './components/PlayerInfo/';
 import Home from './components/Login';
+import Bidding from './components/PlayerInfo/';
+import Players from './components/Players/';
+import Teams from './components/Teams';
+import Details from './components/Details/';
 import { DrawerNavigator } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import React from 'react';
@@ -29,12 +30,15 @@ const RootStack = DrawerNavigator({
   Home: {
     screen: Home
   },
+  Bidding: {
+    screen: Bidding
+  },
+  Teams: {
+    screen: Teams
+  },
   Players: {
     screen: Players
   },
-  Bidding: {
-    screen: Bidding
-  }
 }, {
     initialRouteName: 'Home',
     contentOptions: {

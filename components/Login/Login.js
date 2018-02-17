@@ -1,10 +1,14 @@
 import React from 'react';
-import {Button, View, Text, ImageBackground, Image} from 'react-native';
+import {View, Text, ImageBackground, Image} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import Config from './../../config';
 import addGInfo from './../../redux/actions/user';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {Button} from 'native-base';
+import styles from './style';
+import * as firebase from 'firebase';
+import updateTournamentData from './../../redux/actions/tournament';
 
 class Login extends React.Component {
     static navigationOptions = {
@@ -13,7 +17,21 @@ class Login extends React.Component {
       drawerIcon: ({tintColor}) => (<Image source={require('./login.jpeg')} style={{width: 20, height: 26}}/>)
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        firebase
+            .database()
+            .ref('/')
+            .on('value', (snapshot) => {
+            var data = snapshot.val();
+            // console.log("APP DATA", data);
+            // this.setState({ currentSportId: 1 });
+            // this.setState({ currentTournamentId: 1 });
+            // this.setState({ tournamentDetails: data.tournaments });
+            // this.setState({ playerDetails: data.users });
+            console.log('data recieved');
+            
+            this.props.updateTournamentData(data);
+        });
         var self = this;
         this.logFunc = async function signInWithGoogleAsync() {
             try {
@@ -29,9 +47,7 @@ class Login extends React.Component {
                         .props
                         .addGInfo(result);
                     this
-                        .props
-                        .navigation
-                        .navigate('Bidding');
+                        .navigateToDrawer();
                     return result.accessToken;
                 } else {
                     return {cancelled: true};
@@ -41,13 +57,18 @@ class Login extends React.Component {
                 return {error: true};
             }
         }
+        
     }
 
-    navigateToBidding = () => {
-      this.props.navigation.navigate('Bidding');
+    navigateToScreen = () => {
+      this.props.navigation.navigate('Teams');
     }
 
+    navigateToDrawer = () => {
+        this.props.navigation.navigate('DrawerOpen');
+    }
     render() {
+        // this.navigateToScreen();
         return (<ImageBackground
               style={{
                 backgroundColor: '#fff',
@@ -65,12 +86,20 @@ class Login extends React.Component {
                   alignItems: 'center',
                   justifyContent: 'center'
               }}>
-                  <Text style={{fontSize:40, fontWeight: 'bold', textAlign: 'right', paddingRight: 20}}>
+                  <Text style={styles.heading}>
                     KNOLSKAPE Badminton League
                   </Text>
-                  {this.props.user.payload?
-                    this.navigateToBidding()
-                    :<Button title="Login with Google" onPress={() => this.logFunc()}/>
+                  {this.props.user.accessToken?
+                    <Button 
+                        style={[styles.buttonStyle, styles.menuButton]} 
+                        onPress={() => this.navigateToDrawer()}>
+                        <Text>Menu</Text>
+                    </Button>
+                    :<Button 
+                        style={[styles.buttonStyle, styles.loginButton]}
+                        onPress={() => this.logFunc()}>
+                        <Text>Login with Google</Text>
+                    </Button>
                   }
               </View>
             </ImageBackground>
@@ -79,15 +108,14 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    // console.log("State",state);
     return {user: state.user};
 };
-// console.log(addGInfo);
-function mapDispatchToProps(dispatch) {
+
+const mapDispatchToProps = (dispatch) => {
     return {
-        actions: bindActionCreators({
-            addGInfo
-        }, dispatch)
+        addGInfo(user) {
+            dispatch(addGInfo(user));
+        }
     }
-};
-export default connect(mapStateToProps, {addGInfo})(Login);
+}
+export default connect(mapStateToProps, {addGInfo, updateTournamentData})(Login);

@@ -1,13 +1,13 @@
-import {ADD_GOOGLE_AUTH_INFO} from '../constants/index.actions';
+import actionConsts from '../constants';
 
 const user = (state = {}, action) => {
     const payload = action.payload;
     switch (action.type) {
-        case ADD_GOOGLE_AUTH_INFO:
+        case actionConsts.get('ADD_GOOGLE_AUTH_INFO'):
             {
                 return {
                     ...state,
-                    payload
+                    ...payload
                 };
             }
         default:
