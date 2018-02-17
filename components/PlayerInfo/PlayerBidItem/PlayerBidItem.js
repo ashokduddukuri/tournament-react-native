@@ -17,7 +17,7 @@ export default class PlayerItem extends React.PureComponent {
           {
             player.imageUrl
               ? <Thumbnail size={20} source={{ uri: player.imageUrl }} />
-              : <Thumbnail size={20} source={require('./profile.png')} />
+              : <Thumbnail size={20} source={require('./../../../assets/images/profile.png')} />
           }
         </Left>
         <Body>
@@ -28,7 +28,7 @@ export default class PlayerItem extends React.PureComponent {
         {
           player.soldValue
             ? <Right>
-              <Thumbnail style={{width:55, height: 30}} square source={require('./sold.png')} />
+              <Thumbnail style={{width:55, height: 30}} square source={require('./../../../assets/images/sold.png')} />
               <Text>{player.soldValue} {player.denomination}</Text>
             </Right>
             : <Right />

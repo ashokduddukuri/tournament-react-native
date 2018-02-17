@@ -9,7 +9,7 @@ import HeaderWithMenu from './../HeaderWithMenu';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase';
 import PlayerItem from './PlayerBidItem/';
-import updateTournamentData from './../../redux/actions/tournament';
+import {updateTournamentData} from './../../redux/actions/tournament';
 
 class PlayerInfo extends React.Component {
 
@@ -104,8 +104,6 @@ class PlayerInfo extends React.Component {
   }
 
   render() {
-    console.log("DATA FROM REDUCER: ", this.props.tournament.users);
-    
     return (
       <View style={{ flex: 1 }}>
         <HeaderWithMenu style={{ flex: 0.05 }} {...this.props} title={this.state.titleText} />

@@ -26,9 +26,9 @@ const datas = [
     bg: "#C5F442"
   },
   {
-    name: "Players",
-    route: "Players",
-    icon: "person",
+    name: "Teams",
+    route: "Teams",
+    icon: "people",
     bg: "#C5F442"
   },
   {
@@ -38,9 +38,9 @@ const datas = [
     bg: "#C5F442"
   },
   {
-    name: "Teams",
-    route: "Teams",
-    icon: "people",
+    name: "Players",
+    route: "Players",
+    icon: "person",
     bg: "#C5F442"
   },
 ];

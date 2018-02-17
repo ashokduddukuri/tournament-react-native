@@ -4,8 +4,9 @@ import Home from './components/Login';
 import Bidding from './components/PlayerInfo/';
 import Players from './components/Players/';
 import Teams from './components/Teams';
+import TeamView from './components/TeamView';
 import Details from './components/Details/';
-import { DrawerNavigator } from 'react-navigation';
+import { DrawerNavigator, StackNavigator } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
 import React from 'react';
 import * as firebase from 'firebase';
@@ -26,7 +27,7 @@ const firebasConfig = {
 };
 firebase.initializeApp(firebasConfig);
 
-const RootStack = DrawerNavigator({
+const Drawer = DrawerNavigator({
   Home: {
     screen: Home
   },
@@ -39,13 +40,25 @@ const RootStack = DrawerNavigator({
   Players: {
     screen: Players
   },
-}, {
-    initialRouteName: 'Home',
-    contentOptions: {
-      activeTintColor: "#e91e63"
-    },
-    contentComponent: props => <SideBar {...props} />
-  });
+}, 
+{
+  initialRouteName: 'Home',
+  contentOptions: {
+    activeTintColor: "#e91e63"
+  },
+  contentComponent: props => <SideBar {...props} />
+});
+
+const AppNavigator = StackNavigator(
+  {
+    Drawer: {screen: Drawer},
+    TeamView: {screen: TeamView}
+  },
+  {
+    initialRouteName: "Drawer",
+    headerMode: "none"
+  }
+);
 
 export default class App extends React.Component {
 
@@ -75,7 +88,7 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <RootStack />
+          <AppNavigator />
         </PersistGate>
       </Provider>
     );

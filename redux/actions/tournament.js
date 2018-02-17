@@ -1,10 +1,14 @@
 import actionConsts from '../constants';
 
 
-export default updateTournamentData = (payload) => {
+const updateTournamentData = (payload) => {
     
     return {
         type: actionConsts.get('UPDATE_TOURNAMENT_DATA'),
         payload
     }
 };
+
+export {
+    updateTournamentData
+}

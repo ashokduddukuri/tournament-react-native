@@ -8,7 +8,7 @@ import {bindActionCreators} from 'redux';
 import {Button} from 'native-base';
 import styles from './style';
 import * as firebase from 'firebase';
-import updateTournamentData from './../../redux/actions/tournament';
+import {updateTournamentData} from './../../redux/actions/tournament';
 
 class Login extends React.Component {
     static navigationOptions = {
@@ -28,8 +28,6 @@ class Login extends React.Component {
             // this.setState({ currentTournamentId: 1 });
             // this.setState({ tournamentDetails: data.tournaments });
             // this.setState({ playerDetails: data.users });
-            console.log('data recieved');
-            
             this.props.updateTournamentData(data);
         });
         var self = this;
@@ -53,11 +51,14 @@ class Login extends React.Component {
                     return {cancelled: true};
                 }
             } catch (e) {
-                console.log(e)
+                console.log(e);
                 return {error: true};
             }
         }
         
+    }
+    componentDidMount() {
+        // this.navigateToScreen();
     }
 
     navigateToScreen = () => {
@@ -68,7 +69,6 @@ class Login extends React.Component {
         this.props.navigation.navigate('DrawerOpen');
     }
     render() {
-        // this.navigateToScreen();
         return (<ImageBackground
               style={{
                 backgroundColor: '#fff',
