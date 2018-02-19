@@ -7,6 +7,21 @@ const updateCurrentTeam = (payload) => {
     }
 };
 
+const updateCurrentMatch = (payload) => {
+    return {
+        type: actionConsts.get('UPDATE_CURRENT_MATCH'),
+        payload
+    }
+};
+
+const enableRefereeMode = () => {
+    return {
+        type: actionConsts.get('SET_IS_REFEREE')
+    }
+};
+
 export {
-    updateCurrentTeam
+    updateCurrentTeam,
+    enableRefereeMode,
+    updateCurrentMatch
 }

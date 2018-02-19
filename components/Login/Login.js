@@ -58,11 +58,11 @@ class Login extends React.Component {
         
     }
     componentDidMount() {
-        // this.navigateToScreen();
+        this.navigateToScreen();
     }
 
     navigateToScreen = () => {
-      this.props.navigation.navigate('Teams');
+      this.props.navigation.navigate('Fixtures');
     }
 
     navigateToDrawer = () => {

@@ -32,6 +32,12 @@ const datas = [
     bg: "#C5F442"
   },
   {
+    name: "Fixtures",
+    route: "Fixtures",
+    icon: "people",
+    bg: "#C5F442"
+  },
+  {
     name: "Bidding",
     route: "Bidding",
     icon: "easel",

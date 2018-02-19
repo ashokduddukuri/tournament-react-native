@@ -5,6 +5,8 @@ const actions = Immutable.Map({
     ADD_GOOGLE_AUTH_INFO    : 'ADD_GOOGLE_AUTH_INFO',
     UPDATE_TOURNAMENT_DATA  : 'UPDATE_TOURNAMENT_DATA',
     UPDATE_CURRENT_TEAM     : 'UPDATE_CURRENT_TEAM',
+    SET_IS_REFEREE          : 'SET_IS_REFEREE,',
+    UPDATE_CURRENT_MATCH    : 'UPDATE_CURRENT_MATCH',
 });
 
 export default actions;

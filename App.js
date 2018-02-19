@@ -5,6 +5,7 @@ import Bidding from './components/PlayerInfo/';
 import Players from './components/Players/';
 import Teams from './components/Teams';
 import TeamView from './components/TeamView';
+import FixtureView from './components/FixtureView';
 import Details from './components/Details/';
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 import { Provider, connect } from 'react-redux';
@@ -15,6 +16,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/store.js';
 import * as Expo from "expo";
 import SideBar from "./components/Sidebar";
+import Fixtures from './components/Fixtures';
 
 
 const firebasConfig = {
@@ -40,6 +42,9 @@ const Drawer = DrawerNavigator({
   Players: {
     screen: Players
   },
+  Fixtures: {
+    screen: Fixtures
+  }
 }, 
 {
   initialRouteName: 'Home',
@@ -52,7 +57,8 @@ const Drawer = DrawerNavigator({
 const AppNavigator = StackNavigator(
   {
     Drawer: {screen: Drawer},
-    TeamView: {screen: TeamView}
+    TeamView: {screen: TeamView},
+    FixtureView: {screen: FixtureView},
   },
   {
     initialRouteName: "Drawer",
