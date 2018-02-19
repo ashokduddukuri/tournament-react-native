@@ -97,7 +97,7 @@ class TeamView extends React.Component {
                                 {data.name}
                             </Text>
                             <Text note>
-                                Sold Value: {data.soldValue} {data.denomination}
+                                Sold Amount: {data.soldValue} {data.denomination}
                             </Text>
                             <Text note>
                                 Group: {data.categoryName}

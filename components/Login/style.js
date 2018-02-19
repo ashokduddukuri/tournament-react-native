@@ -20,5 +20,10 @@ export default {
         paddingRight: 20,
         color: '#555555',
         fontFamily: 'Roboto'
+    },
+    text: {
+        fontFamily: 'Roboto_medium',
+        fontSize: 20,
+        color: '#555555'
     }
 };

@@ -93,12 +93,12 @@ class Login extends React.Component {
                     <Button 
                         style={[styles.buttonStyle, styles.menuButton]} 
                         onPress={() => this.navigateToDrawer()}>
-                        <Text>Menu</Text>
+                        <Text style={styles.text}>Menu</Text>
                     </Button>
                     :<Button 
                         style={[styles.buttonStyle, styles.loginButton]}
                         onPress={() => this.logFunc()}>
-                        <Text>Login with Google</Text>
+                        <Text style={styles.text}>Login with Google</Text>
                     </Button>
                   }
               </View>
