@@ -1,2 +1,0 @@
-export const TEST_ACTION = 'TEST_ACTION';
-export const ADD_GOOGLE_AUTH_INFO = 'ADD_GOOGLE_AUTH_INFO';

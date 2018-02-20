@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import {Header, Icon} from 'react-native-elements';
+import {Header} from 'react-native-elements';
+import {Icon} from 'native-base';
 
 export default class HeaderWithMenu extends React.Component {
   render() {
@@ -10,29 +11,25 @@ export default class HeaderWithMenu extends React.Component {
 
     return (
       <Header
-        leftComponent={<Icon
+        leftComponent={
+                        this.props.type === 'back' ?
+                          <Icon
+                          name='arrow-back'
+                          size={30}
+                          underlayColor='#3f51b5'
+                          color="#fff"
+                          onPress={() => this.props.navigation.goBack()}
+                          />
+                        :
+                          <Icon
                           name='menu'
-                          type='menu'
                           size={30}
                           underlayColor='#3f51b5'
                           color="#fff"
                           onPress={() => this.props.navigation.navigate('DrawerOpen')}
                           />}
-        centerComponent={{ text: this.props.title, style: { color: '#fff', fontSize: 20 } }}
+        centerComponent={{ text: this.props.title, style: { color: '#fff', fontSize: 20, fontFamily: 'Roboto' } }}
       />
     )
   }
 }
-
-// rightComponent={{ icon: 'home', color: '#fff' }}
-// leftComponent={{ icon: 'menu', color: '#fff'}}
-// <View
-// style={{
-//   backgroundColor: '#ECE0B8',
-//   height: 40,
-//   alignItems: 'center',
-//   justifyContent: 'center'
-// }}
-// >
-// <Text>{this.props.title}</Text>
-// </View>

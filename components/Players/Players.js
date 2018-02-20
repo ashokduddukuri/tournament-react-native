@@ -35,13 +35,13 @@ class Players extends React.Component {
   }
 
   componentDidMount() {
-    firebase
-      .database()
-      .ref('/users')
-      .on('value', (snapshot) => {
-        var users = snapshot.val();
-        this.setState({playerDetails: users})
-      });
+    // firebase
+    //   .database()
+    //   .ref('/users')
+    //   .on('value', (snapshot) => {
+    //     var users = snapshot.val();
+    //     this.setState({playerDetails: users})
+    //   });
   }
 
   _renderItem = ({item}) => {
@@ -49,10 +49,10 @@ class Players extends React.Component {
   }
 
   renderPlayers = () => {
-    if (this.state.playerDetails) {
+    if (this.props.tournament.users) {
       const dataToRender = this
-        .state
-        .playerDetails
+        .props.tournament
+        .users
         .map((player, index) => {
           return {key: index, name: player.name, imageUrl: player.imageUrl};
         });
@@ -76,16 +76,9 @@ class Players extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // provide only one notification at a time
-  // console.log("players", state)
-  return {"As": "AS"};
+  return { 
+    tournament: state.tournament,
+    user: state.user
+  };
 };
-// console.log(addGInfo);
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({
-      addGInfo
-    }, dispatch)
-  }
-}
 export default connect(mapStateToProps, null)(Players)

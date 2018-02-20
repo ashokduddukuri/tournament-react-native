@@ -20,15 +20,33 @@ const iconBidding = require("./../../assets/images/bid.png");
 
 const datas = [
   {
-    name: "Players",
-    route: "Players",
-    icon: "person",
+    name: "Home",
+    route: "Home",
+    icon: "home",
+    bg: "#C5F442"
+  },
+  {
+    name: "Teams",
+    route: "Teams",
+    icon: "people",
+    bg: "#C5F442"
+  },
+  {
+    name: "Fixtures",
+    route: "Fixtures",
+    icon: "people",
     bg: "#C5F442"
   },
   {
     name: "Bidding",
     route: "Bidding",
     icon: "easel",
+    bg: "#C5F442"
+  },
+  {
+    name: "Players",
+    route: "Players",
+    icon: "person",
     bg: "#C5F442"
   },
 ];

@@ -1,5 +1,8 @@
-import {ADD_GOOGLE_AUTH_INFO} from '../constants/index.actions';
+import actionConsts from '../constants';
 
 export default addGInfo = (payload) => {
-    return {type: ADD_GOOGLE_AUTH_INFO, payload}
+    return {
+        type: actionConsts.get('ADD_GOOGLE_AUTH_INFO'),
+        payload
+    }
 };
