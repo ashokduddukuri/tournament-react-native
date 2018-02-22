@@ -7,6 +7,7 @@ const actions = Immutable.Map({
     UPDATE_CURRENT_TEAM     : 'UPDATE_CURRENT_TEAM',
     SET_IS_REFEREE          : 'SET_IS_REFEREE,',
     UPDATE_CURRENT_MATCH    : 'UPDATE_CURRENT_MATCH',
+    UPDATE_CURRENT_GAME     : 'UPDATE_CURRENT_GAME',
 });
 
 export default actions;

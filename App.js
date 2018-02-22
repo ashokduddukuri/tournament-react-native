@@ -17,6 +17,7 @@ import { store, persistor } from './redux/store.js';
 import * as Expo from "expo";
 import SideBar from "./components/Sidebar";
 import Fixtures from './components/Fixtures';
+import Scoring from './components/Scoring';
 
 
 const firebasConfig = {
@@ -59,6 +60,7 @@ const AppNavigator = StackNavigator(
     Drawer: {screen: Drawer},
     TeamView: {screen: TeamView},
     FixtureView: {screen: FixtureView},
+    Scoring: {screen: Scoring}
   },
   {
     initialRouteName: "Drawer",

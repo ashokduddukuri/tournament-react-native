@@ -15,6 +15,11 @@ const uistate = (state = {}, action) => {
                 ...state,
                 'currentMatchId': payload
             };
+        case actionConsts.get('UPDATE_CURRENT_GAME'):
+            return {
+                ...state,
+                'currentGame': payload
+            };
         case actionConsts.get('SET_IS_REFEREE'):
             return {
                 ...state,

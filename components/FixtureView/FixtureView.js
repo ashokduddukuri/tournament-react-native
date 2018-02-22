@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     View,
+    Alert
 } from 'react-native';
 import {
     Content,
@@ -14,12 +15,19 @@ import {
     Thumbnail,
     Picker, 
     Form, 
-    Item as FormItem
+    Item as FormItem,
+    Button,
+    Container,
+    Header
 } from 'native-base';
 import HeaderWithMenu from './../HeaderWithMenu';
 import {
     connect
 } from 'react-redux';
+import * as firebase from 'firebase';
+import { getPlayerDetails } from './../../Utils/tournamentUtil';
+import styles from './style';
+import { updateCurrentGame } from './../../redux/actions/uistate';
 
 const Item = Picker.Item;
 class FixtureView extends React.Component {
@@ -27,17 +35,34 @@ class FixtureView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected2: undefined
+            t1p1: undefined,
+            isChoosePlayerEnabled: false,
+            currentGameId: null
         };
     }
 
-    onValueChange2(value) {
+    onValueChanget1p1 = (value) => {
         this.setState({
-          selected2: value
+          t1p1: value
+        });
+    }
+    onValueChanget1p2 = (value) => {
+        this.setState({
+          t1p2: value
+        });
+    }
+    onValueChanget2p1 = (value) => {
+        this.setState({
+          t2p1: value
+        });
+    }
+    onValueChanget2p2 = (value) => {
+        this.setState({
+          t2p2: value
         });
     }
 
-    getMatches = () => {
+    getGames = () => {
         const { currentMatchId } = this.props.uistate;
         const currentTournament = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
         const { games } = currentTournament;
@@ -47,10 +72,12 @@ class FixtureView extends React.Component {
         const currentGames = games.filter((game) => {
             return game.matchId == currentMatchId;
         });
-        
-        return gameListData = currentGames.map((game, index) => {
-            return {
+        const gameListData = {};
+        currentGames.map((game, index) => {
+            gameListData[game.id] = {
+
                 key: game.id,
+                gameId: game.id,
                 name: sports.gameTypes[game.gameType].name,
                 team1: currentMatch.team1,
                 team2: currentMatch.team2,
@@ -64,40 +91,249 @@ class FixtureView extends React.Component {
                 scoreEntries: game.scoreEntries
             }
         });
+        return gameListData;
     }
 
-    renderForm1 = () => {
+    getTeamPlayers = (teamType) => {
+        const { currentMatchId } = this.props.uistate;
+        const currentTournament = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
+        const currentMatch = currentTournament.matches[currentMatchId];
+        let teamPlayers;
+        if(teamType == "team1") {
+            teamPlayers = Object.keys(currentTournament.teams[currentMatch.team1].players);
+        } else {
+            teamPlayers = Object.keys(currentTournament.teams[currentMatch.team2].players);
+        }
+
+        return playerInfo = teamPlayers.map((playerID) => {
+            return getPlayerDetails(playerID, this.props.tournament);
+        });
+    }
+
+    renderPlayersPicker = (playerInfo) => {
+        return playerInfo.map((player,index) => {
+            return (
+                <Item key={index} label={player.name + ' (' + player.gender + ')'} value={player.id} />
+            )
+        });
+    }
+
+    renderFormTeam1Player1 = () => {
+
+        const playerInfo = this.getTeamPlayers("team1");
         return (
             <Form>
                 <Picker
                 mode="dropdown"
-                placeholder="Select Player 1"
-                note={false}
-                selectedValue={this.state.selected2}
-                onValueChange={this.onValueChange2.bind(this)}
+                placeholder="Select P1"
+                selectedValue={this.state.t1p1}
+                onValueChange={this.onValueChanget1p1}
                 >
-                <Item label="Wallet" value="key0" />
-                <Item label="ATM Card" value="key1" />
-                <Item label="Debit Card" value="key2" />
-                <Item label="Credit Card" value="key3" />
-                <Item label="Net Banking" value="key4" />
+                {this.renderPlayersPicker(playerInfo)}
                 </Picker>
             </Form>
         );
     }
 
-    renderFixtureView = () => {
+    renderFormTeam1Player2 = () => {
+        const playerInfo = this.getTeamPlayers("team1");
         return (
-            <Content>
+            <Form>
+                <Picker
+                mode="dropdown"
+                placeholder="Select P2"
+                selectedValue={this.state.t1p2}
+                onValueChange={this.onValueChanget1p2}
+                >
+                {this.renderPlayersPicker(playerInfo)}
+                </Picker>
+            </Form>
+        );
+    }
+
+    renderFormTeam2Player1 = () => {
+        const playerInfo = this.getTeamPlayers("team2");
+        return (
+            <Form>
+                <Picker
+                mode="dropdown"
+                placeholder="Select P1"
+                selectedValue={this.state.t2p1}
+                onValueChange={this.onValueChanget2p1}
+                >
+                {this.renderPlayersPicker(playerInfo)}
+                </Picker>
+            </Form>
+        );
+    }
+
+    renderFormTeam2Player2 = () => {
+        const playerInfo = this.getTeamPlayers("team2");
+        return (
+            <Form>
+                <Picker
+                mode="dialog"
+                placeholder="Select P1"
+                selectedValue={this.state.t2p2}
+                onValueChange={this.onValueChanget2p2}
+                >
+                {this.renderPlayersPicker(playerInfo)}
+                </Picker>
+            </Form>
+        );
+    }
+
+    handleChoosePlayer = (gameId) => {
+        this.setState({t1p1: null, t1p2: null, t2p1: null, t2p2: null, currentGameId: null});
+
+        this.setState({currentGameId: gameId});
+        
+        this.setState({isChoosePlayerEnabled: !this.state.isChoosePlayerEnabled});
+    }
+
+    handleStartGame = (isSaveData, selectedGameId) => {
+        let team1Players = [this.state.t1p1, this.state.t1p2];
+        let team2Players = [this.state.t2p1, this.state.t2p2];
+
+        team1Players = team1Players.filter((player) => {
+            return player != null;
+        });
+        team2Players = team2Players.filter((player) => {
+            return player != null;
+        });
+        const gameData = this.getGames();
+
+        if(isSaveData) {
+            // to handle first time game start and save data to firebase
+            if((gameData[this.state.currentGameId].teamSize == team1Players.length) && (team2Players.length == gameData[this.state.currentGameId].teamSize)){
+                const referee = this.props.user.user.email;
+        
+                const referees = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].games[this.state.currentGameId].referees || [];
+                referees.push(referee);
+                firebase.database()
+                    .ref('/tournaments/' + this.props.tournament.currentTournamentId + '/games/'+ this.state.currentGameId)
+                    .update({
+                        team1Players: team1Players,
+                        team2Players: team2Players,
+                        isGameOngoing: true,
+                        isScoring: true,
+                        referees: referees
+                    });
+            const gameId = this.state.currentGameId;
+            const refId = this.props.user.user.email;
+            console.log(team1Players, team2Players, gameId);
+            this.props.updateCurrentGame({gameId: gameId, team1Players: team1Players, team2Players: team2Players});
+            } else {
+                Alert.alert('Choose appropriate players')
+            }
+        } else {
+            // to update the store with available game data
+            const currentGame = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].games[selectedGameId];
+            const {id, team1Players, team2Players} = currentGame;
+            this.props.updateCurrentGame({gameId: id, team1Players, team2Players});
+        }
+        
+        this.props.navigation.navigate('Scoring');
+
+    }
+
+    renderTeamPlayers = (team1Players, team2Players) => {
+        const team1playerDetails = team1Players.map((playerID) => {
+            return getPlayerDetails(playerID, this.props.tournament);
+        });
+        const team2playerDetails = team2Players.map((playerID) => {
+            return getPlayerDetails(playerID, this.props.tournament);
+        });
+
+        return (
+            <Body>
+                <Body>
+                    <Text numberOfLines={1} note style={styles.team1}>{team1playerDetails[0].name}</Text>
+                    <Text numberOfLines={1} note style={styles.team1}>{team1playerDetails[1] ? team1playerDetails[1].name : null}</Text>
+                </Body>
+                <Body>
+                    <Text>vs.</Text>
+                    <Text numberOfLines={1} note style={styles.team2}>{team2playerDetails[0].name}</Text>
+                    <Text numberOfLines={1} note style={styles.team2}>{team2playerDetails[1] ? team2playerDetails[1].name : null}</Text>
+                </Body>
+            </Body>
+        )
+        
+    }
+
+    renderFixtureView = () => {
+        const gameData = this.getGames();
+        return (
+            <Content padder={false}>
+                <Header style={styles.heading}>
+                    <Body>
+                        <Text>Game Type</Text>
+                    </Body>
+                    <Body>
+                        <Body>
+                            <Text style={styles.team1} >Team 1</Text>
+                        </Body>
+                        <Body>
+                            <Text>vs.</Text>
+                            <Text style={styles.team2}>Team 2</Text>
+                        </Body>
+                    </Body>
+                    <Body>
+                        <Text style={{alignItems: 'center'}} >Score</Text>
+                    </Body>
+                </Header>
+                {this.state.isChoosePlayerEnabled ? 
+                    <ListItem style={{height:200}}>
+                        <Body>
+                            <Text >Team 1</Text>
+                            {this.renderFormTeam1Player1()}
+                            <Text note></Text>
+                            {gameData[this.state.currentGameId].teamSize == 2 ?
+                                this.renderFormTeam1Player2()
+                                : null
+                            }
+                        </Body>
+                        <Body>
+                            <Text >Team 2</Text>
+                            {this.renderFormTeam2Player1()}
+                            <Text note></Text>
+                            {gameData[this.state.currentGameId].teamSize == 2 ?
+                                this.renderFormTeam2Player2()
+                                : null
+                            }
+                        </Body>
+                        <Body>
+                            <Button success onPress={() => this.handleStartGame(true)}>
+                                <Text> Start Game </Text>
+                            </Button>
+                            <Text>{gameData[this.state.currentGameId].name}</Text>
+                        </Body>
+                    </ListItem>
+                    : null
+                }
                 <List
-                    dataArray={this.getMatches()}
+                    dataArray={gameData}
                     renderRow={data =>
                     <ListItem>
-                        <Body>
+                        <Body style={{justifyContent: 'flex-start'}} >
                             <Text>{data.name}</Text>
                         </Body>
-                        {this.renderForm1()}
-                        <Body>
+                        <Body style={{alignItems: 'center'}}>
+                        {
+                            this.props.uistate.isReferee && !data.team1Players ?
+                                <Button rounded onPress={() => this.handleChoosePlayer(data.gameId)}>
+                                    <Text>Choose Players</Text>
+                                </Button>
+                            : this.renderTeamPlayers(data.team1Players, data.team2Players)
+                        }
+                        </Body>
+                        <Body style={{alignItems: 'center'}}>
+                            {data.team1Players ?
+                                <Button success onPress={() => this.handleStartGame(false, data.gameId)}>
+                                    <Text> Start Game </Text>
+                                </Button>
+                                : null
+                            }
                             <Text>{data.team1ScoreFinal} - {data.team2ScoreFinal}</Text>
                         </Body>    
                     </ListItem>}
@@ -107,11 +343,9 @@ class FixtureView extends React.Component {
     }
 
     render() {
-        console.log(this.state.selected2);
-        
         return ( 
             <View style = {{ flex: 1 }} >
-                <HeaderWithMenu style = {{ flex: 0.05 }} { ...this.props } type={'back'} title = { this.state.titleText } /> 
+                <HeaderWithMenu style = {{ flex: 0.05 }} { ...this.props } type={'back'} title = { 'Games' } /> 
                 <View style = {{ flex: 1 }} >
                     {this.renderFixtureView()} 
                 </View > 
@@ -127,4 +361,4 @@ const mapStateToProps = (state, ownProps) => {
       uistate: state.uistate,
     };
 };
-export default connect(mapStateToProps, null)(FixtureView);
+export default connect(mapStateToProps, {updateCurrentGame})(FixtureView);

@@ -14,6 +14,13 @@ const updateCurrentMatch = (payload) => {
     }
 };
 
+const updateCurrentGame = (payload) => {
+    return {
+        type: actionConsts.get('UPDATE_CURRENT_GAME'),
+        payload
+    }
+};
+
 const enableRefereeMode = () => {
     return {
         type: actionConsts.get('SET_IS_REFEREE')
@@ -23,5 +30,6 @@ const enableRefereeMode = () => {
 export {
     updateCurrentTeam,
     enableRefereeMode,
-    updateCurrentMatch
+    updateCurrentMatch,
+    updateCurrentGame
 }
