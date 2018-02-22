@@ -18,6 +18,7 @@ import * as Expo from "expo";
 import SideBar from "./components/Sidebar";
 import Fixtures from './components/Fixtures';
 import Scoring from './components/Scoring';
+import Logout from './components/Logout';
 
 
 const firebasConfig = {
@@ -45,6 +46,9 @@ const Drawer = DrawerNavigator({
   },
   Fixtures: {
     screen: Fixtures
+  },
+  Logout: {
+    screen: Logout
   }
 }, 
 {

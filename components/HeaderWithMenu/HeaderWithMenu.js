@@ -9,6 +9,7 @@ export default class HeaderWithMenu extends React.Component {
       console.log('CLICKED');
     }
 
+    const { routeName } = this.props;
     return (
       <Header
         leftComponent={
@@ -18,7 +19,7 @@ export default class HeaderWithMenu extends React.Component {
                           size={30}
                           underlayColor='#3f51b5'
                           color="#fff"
-                          onPress={() => this.props.navigation.goBack()}
+                          onPress={() => routeName ? this.props.navigation.navigate(routeName) : this.props.navigation.goBack()}
                           />
                         :
                           <Icon

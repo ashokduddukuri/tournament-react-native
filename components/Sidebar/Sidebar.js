@@ -49,6 +49,12 @@ const datas = [
     icon: "person",
     bg: "#C5F442"
   },
+  {
+    name: "Logout",
+    route: "Logout",
+    icon: "ios-log-out",
+    bg: "#C5F442"
+  },
 ];
 
 class SideBar extends Component {

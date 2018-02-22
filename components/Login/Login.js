@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, ImageBackground, Image} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import Config from './../../config';
-import addGInfo from './../../redux/actions/user';
+import {addGInfo} from './../../redux/actions/user';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Button} from 'native-base';
@@ -58,7 +58,7 @@ class Login extends React.Component {
         
     }
     componentDidMount() {
-        this.navigateToScreen();
+        // this.navigateToScreen();
     }
 
     navigateToScreen = () => {
@@ -69,6 +69,8 @@ class Login extends React.Component {
         this.props.navigation.navigate('DrawerOpen');
     }
     render() {
+        console.log(this.props.user);
+        
         return (<ImageBackground
               style={{
                 backgroundColor: '#fff',

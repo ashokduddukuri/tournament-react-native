@@ -28,6 +28,7 @@ import * as firebase from 'firebase';
 import { getPlayerDetails } from './../../Utils/tournamentUtil';
 import styles from './style';
 import { updateCurrentGame } from './../../redux/actions/uistate';
+import TeamPlayers from './../TeamPlayers';
 
 const Item = Picker.Item;
 class FixtureView extends React.Component {
@@ -237,37 +238,13 @@ class FixtureView extends React.Component {
 
     }
 
-    renderTeamPlayers = (team1Players, team2Players) => {
-        const team1playerDetails = team1Players.map((playerID) => {
-            return getPlayerDetails(playerID, this.props.tournament);
-        });
-        const team2playerDetails = team2Players.map((playerID) => {
-            return getPlayerDetails(playerID, this.props.tournament);
-        });
-
-        return (
-            <Body>
-                <Body>
-                    <Text numberOfLines={1} note style={styles.team1}>{team1playerDetails[0].name}</Text>
-                    <Text numberOfLines={1} note style={styles.team1}>{team1playerDetails[1] ? team1playerDetails[1].name : null}</Text>
-                </Body>
-                <Body>
-                    <Text>vs.</Text>
-                    <Text numberOfLines={1} note style={styles.team2}>{team2playerDetails[0].name}</Text>
-                    <Text numberOfLines={1} note style={styles.team2}>{team2playerDetails[1] ? team2playerDetails[1].name : null}</Text>
-                </Body>
-            </Body>
-        )
-        
-    }
-
     renderFixtureView = () => {
         const gameData = this.getGames();
         return (
             <Content padder={false}>
                 <Header style={styles.heading}>
-                    <Body>
-                        <Text>Game Type</Text>
+                    <Body style={{alignItems: 'flex-start'}}>
+                        <Text style={styles.textColor}>Game Type</Text>
                     </Body>
                     <Body>
                         <Body>
@@ -279,7 +256,7 @@ class FixtureView extends React.Component {
                         </Body>
                     </Body>
                     <Body>
-                        <Text style={{alignItems: 'center'}} >Score</Text>
+                        <Text style={[styles.textColor, {alignItems: 'center'}]} >Score</Text>
                     </Body>
                 </Header>
                 {this.state.isChoosePlayerEnabled ? 
@@ -304,7 +281,7 @@ class FixtureView extends React.Component {
                         </Body>
                         <Body>
                             <Button success onPress={() => this.handleStartGame(true)}>
-                                <Text> Start Game </Text>
+                                <Text style={styles.buttonText}> Start Game </Text>
                             </Button>
                             <Text>{gameData[this.state.currentGameId].name}</Text>
                         </Body>
@@ -316,7 +293,7 @@ class FixtureView extends React.Component {
                     renderRow={data =>
                     <ListItem>
                         <Body style={{justifyContent: 'flex-start'}} >
-                            <Text>{data.name}</Text>
+                            <Text style={styles.textColor} >{data.name}</Text>
                         </Body>
                         <Body style={{alignItems: 'center'}}>
                         {
@@ -324,17 +301,17 @@ class FixtureView extends React.Component {
                                 <Button rounded onPress={() => this.handleChoosePlayer(data.gameId)}>
                                     <Text>Choose Players</Text>
                                 </Button>
-                            : this.renderTeamPlayers(data.team1Players, data.team2Players)
+                            : <TeamPlayers tournament={this.props.tournament} team1Players={data.team1Players} team2Players={data.team2Players} />
                         }
                         </Body>
                         <Body style={{alignItems: 'center'}}>
-                            {data.team1Players ?
-                                <Button success onPress={() => this.handleStartGame(false, data.gameId)}>
-                                    <Text> Start Game </Text>
+                            {data.team1Players && this.props.uistate.isReferee ?
+                                <Button style={{alignItems: 'flex-end'}} success onPress={() => this.handleStartGame(false, data.gameId)}>
+                                    <Text style={styles.buttonText} > Continue </Text>
                                 </Button>
                                 : null
                             }
-                            <Text>{data.team1ScoreFinal} - {data.team2ScoreFinal}</Text>
+                            <Text style={styles.textColor}>{data.team1ScoreFinal} - {data.team2ScoreFinal}</Text>
                         </Body>    
                     </ListItem>}
                 />
