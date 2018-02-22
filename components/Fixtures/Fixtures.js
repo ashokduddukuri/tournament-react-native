@@ -19,7 +19,7 @@ import {
     connect
 } from 'react-redux';
 import * as firebase from 'firebase';
-import { updateCurrentTeam, enableRefereeMode, updateCurrentMatch } from './../../redux/actions/uistate';
+import { updateCurrentTeam, setRefereeMode, updateCurrentMatch } from './../../redux/actions/uistate';
 
 class Fixtures extends React.Component {
 
@@ -36,7 +36,9 @@ class Fixtures extends React.Component {
         const { referees } = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
 
         if(referees.indexOf(user.email) > -1) {
-            this.setRefereeMode();
+            this.props.setRefereeMode(true);
+        } else {
+            this.props.setRefereeMode(false);
         }
     }
 
@@ -111,10 +113,6 @@ class Fixtures extends React.Component {
         firebase.database().ref('/tournaments/' + this.props.tournament.currentTournamentId + '/games/').set(games);
 
         // firebase.database.ref('/tournaments/' + this.props.tournament.currentTournamentId + '/matches/1/games/sc')
-    }
-
-    setRefereeMode = () => {
-        this.props.enableRefereeMode();
     }
 
     sanitizeFixtureData = (fixures) => {
@@ -241,6 +239,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 export default connect(mapStateToProps, {
     updateCurrentTeam, 
-    enableRefereeMode, 
+    setRefereeMode, 
     updateCurrentMatch
 })(Fixtures);

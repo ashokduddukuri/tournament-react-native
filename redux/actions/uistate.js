@@ -21,15 +21,16 @@ const updateCurrentGame = (payload) => {
     }
 };
 
-const enableRefereeMode = () => {
+const setRefereeMode = (payload) => {
     return {
-        type: actionConsts.get('SET_IS_REFEREE')
+        type: actionConsts.get('SET_IS_REFEREE'),
+        payload
     }
 };
 
 export {
     updateCurrentTeam,
-    enableRefereeMode,
+    setRefereeMode,
     updateCurrentMatch,
     updateCurrentGame
 }

@@ -24,4 +24,14 @@ export default {
         // fontWeight: 'bold',
         color: '#FF5714'
     },
+    heading: {
+        backgroundColor: '#E6E6E4',
+        height: 75,
+        paddingBottom: 20,
+        borderWidth: 1,
+        borderColor: '#d6d7da',
+    },
+    textColor: {
+        color: '#747C84'
+    },
 }

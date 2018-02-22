@@ -217,7 +217,6 @@ class FixtureView extends React.Component {
                         team1Players: team1Players,
                         team2Players: team2Players,
                         isGameOngoing: true,
-                        isScoring: true,
                         referees: referees
                     });
             const gameId = this.state.currentGameId;

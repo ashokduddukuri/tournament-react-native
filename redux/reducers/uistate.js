@@ -23,7 +23,7 @@ const uistate = (state = {}, action) => {
         case actionConsts.get('SET_IS_REFEREE'):
             return {
                 ...state,
-                'isReferee': true
+                'isReferee': payload
             };
         default:
             return state;

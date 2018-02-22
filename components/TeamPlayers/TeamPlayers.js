@@ -7,6 +7,13 @@ export default class TeamPlayers extends React.Component {
   render() {
 
     const { team1Players, team2Players, tournament } = this.props;
+    if(!team1Players) {
+        return (
+            <Body>
+                <Text>NA</Text>
+            </Body>
+        )
+    }
     const team1playerDetails = team1Players.map((playerID) => {
       return getPlayerDetails(playerID, tournament);
     });
