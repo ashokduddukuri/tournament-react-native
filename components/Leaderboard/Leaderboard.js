@@ -20,7 +20,8 @@ import {
 } from 'react-redux';
 import * as firebase from 'firebase';
 import { updateCurrentTeam, setRefereeMode, updateCurrentMatch } from './../../redux/actions/uistate';
-import { matchWiseGames, getOverallTeamScoreForMatch, getLeaderboardData } from './../../Utils/tournamentUtil';
+import { getPlayerDetails, getLeaderboardData } from './../../Utils/tournamentUtil';
+import Teams from '../Teams/Teams';
 
 class Leaderboard extends React.Component {
 
@@ -32,17 +33,60 @@ class Leaderboard extends React.Component {
         };
     }
 
+    _renderItem = ({item}) => {
+        return (
+            <ListItem>
+                <Text>{item.key + 1}</Text>
+                <Body style={{alignItems: 'center'}} >
+                    <Text>{item.teamName}</Text>
+                    <Text numberOfLines={1}>{item.teamOwner.name}</Text>
+                    <Thumbnail size={55} source={{ uri:item.teamImageUrl }} />
+                </Body>
+                <Body style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Text style={{textAlign: 'left'}}>{item.pointsWon}</Text>
+                    <Text>{item.gamesPlayed}</Text>
+                    <Text>{item.gamesWon}</Text>
+                </Body>
+            </ListItem>
+        );
+    }
+
+    sanitizeLeaderboardData = (leaderboardData) => {
+        const tournamentData = this.props.tournament;
+        
+        const currentTournament = tournamentData.tournaments[tournamentData.currentTournamentId];
+
+        const { teams } = currentTournament;
+        return leaderboardData.map((teamData, index) => {
+            const teamDetails = teams.filter((t) => {
+                return t.id == teamData.teamId;
+            })[0];
+            return {
+                key: index,
+                gamesPlayed: teamData.gamesPlayed,
+                gamesWon: teamData.gamesWon,
+                pointsLost: teamData.pointsLost,
+                pointsWon: teamData.pointsWon,
+                teamName: teamDetails.name,
+                teamImageUrl: teamDetails.imageUrl,
+                teamOwner: getPlayerDetails(teamDetails.ownerId, tournamentData)
+            };
+        });
+    }
+
     renderTeams = () => {
         const tournamentData = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
         const {teams, matches} = tournamentData;
         const leaderboardData = getLeaderboardData(tournamentData);
-        console.log("LEADERBOARD", leaderboardData)
-        // teams.map((team) => {
-        //     const teamMatches = matches.filter((match) => {
-        //         return ((match.team1 == team.id) || (match.team2 == team.id));
-        //     });
-        //     console.log("TEAM AMTCHS", team.id, teamMatches);
-        // })
+
+        const getLeaderboardListData = this.sanitizeLeaderboardData(leaderboardData);
+        console.log("LEADERBOARD", getLeaderboardListData)
+        return (
+            <FlatList 
+                data={getLeaderboardListData}
+                renderItem={this._renderItem}
+            />
+        )
     }
 
     render() {
@@ -51,6 +95,22 @@ class Leaderboard extends React.Component {
             <View style = {{ flex: 1 }} >
                 <HeaderWithMenu style = {{ flex: 0.05 }} { ...this.props } title = { this.state.titleText } /> 
                 <View style = {{ flex: 1 }} >
+                    <ListItem >
+                        <Text style={{flex: 0.15}}>Rank</Text>
+                        <Text style={{flex: 0.4, textAlign: 'center'}}>Team</Text>
+                        <Text style={{flex: 0.3, textAlign: 'center'}}>Games Played</Text>
+                        <Text style={{flex: 0.3, textAlign: 'center'}}>Games Won</Text>
+                        <Text style={{flex: 0.2, alignItems: 'flex-end'}}>Points Won</Text>
+                        
+                        {/* <Body style={{alignItems: 'center'}} >
+                        </Body>
+                        <Body style={{flex: 1, flexDirection: 'flex-end', justifyContent: 'space-between'}}>
+                        </Body>
+                        <Body>
+                        </Body>
+                        <Body style={{width: 50}}>
+                        </Body> */}
+                    </ListItem>
                     {this.renderTeams()}
                 </View > 
             </View>

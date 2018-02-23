@@ -198,7 +198,6 @@ class Fixtures extends React.Component {
         
         const currentTournament = tournamentData.tournaments[tournamentData.currentTournamentId];
 
-        // console.log(currentTournament);
         const { matches, teams } = currentTournament;
         
         const isMatchesCreated = currentTournament.matches ? true: false;
