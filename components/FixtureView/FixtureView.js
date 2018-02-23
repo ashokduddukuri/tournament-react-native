@@ -295,6 +295,14 @@ class FixtureView extends React.Component {
                     dataArray={gameData}
                     renderRow={data =>
                     <ListItem>
+                        {data.isGameOngoing && !data.isGameFinished ? 
+                            <Icon style={{color:"green"}} name="ios-timer" />
+                            : null
+                        }
+                        {data.isGameFinished ? 
+                            <Icon style={{color:"red"}} name="ios-ribbon" />
+                            : null
+                        }
                         <Body style={{justifyContent: 'flex-start'}} >
                             <Text style={styles.textColor} >{data.name}</Text>
                         </Body>
