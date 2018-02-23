@@ -20,6 +20,7 @@ import {
 } from 'react-redux';
 import * as firebase from 'firebase';
 import { updateCurrentTeam, setRefereeMode, updateCurrentMatch } from './../../redux/actions/uistate';
+import { matchWiseGames, getOverallTeamScoreForMatch } from './../../Utils/tournamentUtil';
 
 class Fixtures extends React.Component {
 
@@ -51,11 +52,14 @@ class Fixtures extends React.Component {
         
         // console.log(currentTournament);
         const { fixtures, teams } = currentTournament;
-
+        console.log(fixtures);
+        
         let matches = {};
         let games = {};
 
         let matchId = 0, gameId = 0;
+
+        let matchIndex = 0;
 
         fixtures.map((match, index) => {
             
@@ -86,6 +90,7 @@ class Fixtures extends React.Component {
                     isGameFinished: false,
                     scoreEntries: [
                         {
+                            id: 0,
                             team1Score: 0,
                             team2Score: 0
                         }
@@ -98,13 +103,86 @@ class Fixtures extends React.Component {
             matches[index] = {
                 id: index,
                 name: "League Match " + matchId,
+                stageId: 0,
                 team1: match.team1,
                 team2: match.team2,
                 overallScoreTeam1: 0,
                 overallScoreTeam2: 0,
                 isMatchOngoing: false,
             };
+            matchIndex = index;
         });
+        matchIndex++;
+        for(var i = 0; i < 2; i++) {
+            currentSport.gameTypes.map((gameType) => {
+                games[gameId] = {
+                    id: gameId++,
+                    matchId: matchIndex,
+                    gameType: gameType.id,
+                    isGameOngoing: false,
+                    team1Players: [],
+                    team2Players: [],
+                    team1ScoreFinal: 0,
+                    team2ScoreFinal: 0,
+                    isGameFinished: false,
+                    scoreEntries: [
+                        {
+                            id: 0,
+                            team1Score: 0,
+                            team2Score: 0
+                        }
+                    ],
+                    isScoring: false,
+                    refId: []
+                };
+            });
+
+            matches[matchIndex] = {
+                id: matchIndex,
+                name: "Semi final " + i,
+                stageId: 1,
+                team1: null,
+                team2: null,
+                overallScoreTeam1: 0,
+                overallScoreTeam2: 0,
+                isMatchOngoing: false,
+            };
+            matchIndex ++;
+        }
+        currentSport.gameTypes.map((gameType) => {
+            games[gameId] = {
+                id: gameId++,
+                matchId: matchIndex,
+                gameType: gameType.id,
+                isGameOngoing: false,
+                team1Players: [],
+                team2Players: [],
+                team1ScoreFinal: 0,
+                team2ScoreFinal: 0,
+                isGameFinished: false,
+                scoreEntries: [
+                    {
+                        id: 0,
+                        team1Score: 0,
+                        team2Score: 0
+                    }
+                ],
+                isScoring: false,
+                refId: []
+            };
+        });
+
+        matches[matchIndex] = {
+            id: matchIndex,
+            name: "Final",
+            stageId: 2,
+            team1: null,
+            team2: null,
+            overallScoreTeam1: 0,
+            overallScoreTeam2: 0,
+            isMatchOngoing: false,
+        };
+        matchIndex ++;
 
         // let newPostKey = firebase.database().ref('/tournaments/' + this.props.currentTournamentId).child('matches').push().key;
         // console.log("AMTCHES",matches);
@@ -129,8 +207,10 @@ class Fixtures extends React.Component {
             return;
         }
 
-        return fixturesListData = matches.map((match, index) => {
-            
+        let fixturesListData = matches.map((match, index) => {
+            if(!match.team1) {
+                return;
+            }
             const team1 = teams.filter((team) => {
                 return team.id == match.team1;
             })[0];
@@ -144,8 +224,8 @@ class Fixtures extends React.Component {
             const owner2 = this.props.tournament.users.filter((user) => {
                 return user.id == team2.ownerId;
             })[0];
-
-
+            const tournamentData = this.props.tournament.tournaments[this.props.tournament.currentTournamentId];
+            const teamMatchScores = getOverallTeamScoreForMatch(match.id, tournamentData)
             return {
                 key: index,
                 matchId: match.id,
@@ -153,9 +233,16 @@ class Fixtures extends React.Component {
                 owner1: owner1,
                 team2: team2,
                 owner2: owner2,
+                team1MatchScore: teamMatchScores.team1MatchScore,
+                team2MatchScore: teamMatchScores.team2MatchScore,
                 isMatchesCreated: match.isMatchesCreated
             }
         });
+        // console.log(fixturesListData);
+        
+        return fixturesListData = fixturesListData.filter((f) => {
+            return f != null;
+        })
     }
 
     handleTeamClick = (matchId) => {
@@ -177,6 +264,9 @@ class Fixtures extends React.Component {
                     <Text numberOfLines={1}>
                         {item.owner1.name}
                     </Text>
+                    <Text numberOfLines={1}>
+                        {item.team1MatchScore}
+                    </Text>
                 </Body>
                 <Text numberOfLines={1} note>
                     vs.
@@ -188,6 +278,9 @@ class Fixtures extends React.Component {
                     </Text>
                     <Text numberOfLines={1}>
                         {item.owner2.name}
+                    </Text>
+                    <Text numberOfLines={1}>
+                        {item.team2MatchScore}
                     </Text>
                 </Body>
             </ListItem>
@@ -217,7 +310,6 @@ class Fixtures extends React.Component {
 
     render() {
         const teamData = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].teams;
-        console.log("REFEREEMODE", this.props.uistate.isReferee);
         
         return ( 
             <View style = {{ flex: 1 }} >

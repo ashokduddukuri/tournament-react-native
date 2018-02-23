@@ -19,6 +19,7 @@ import SideBar from "./components/Sidebar";
 import Fixtures from './components/Fixtures';
 import Scoring from './components/Scoring';
 import Logout from './components/Logout';
+import Leaderboard from './components/Leaderboard';
 
 
 const firebasConfig = {
@@ -49,6 +50,9 @@ const Drawer = DrawerNavigator({
   },
   Logout: {
     screen: Logout
+  },
+  Leaderboard: {
+    screen: Leaderboard
   }
 }, 
 {

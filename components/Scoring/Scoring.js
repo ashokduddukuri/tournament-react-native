@@ -3,7 +3,8 @@ import {
     View,
     FlatList,
     Image,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 import {
     Content,
@@ -90,7 +91,7 @@ class Scoring extends React.Component {
             team2NewScore +=1;
         }
 
-        newScoreEntries.push({team1Score: team1NewScore, team2Score: team2NewScore});
+        newScoreEntries.push({id: scoreEntries.length + 1,team1Score: team1NewScore, team2Score: team2NewScore});
 
         firebase.database().ref('/tournaments/' + this.props.tournament.currentTournamentId + '/games/' + this.props.uistate.currentGame.gameId).update({
             team1ScoreFinal: team1NewScore,
@@ -101,7 +102,6 @@ class Scoring extends React.Component {
 
     handleScoreDecrement = (team) => {
         const currentGame = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].games[this.props.uistate.currentGame.gameId];
-        // console.log(currentGame, team);
         const {team1ScoreFinal, team2ScoreFinal, scoreEntries} = currentGame;
 
         let team1NewScore = team1ScoreFinal;
@@ -114,7 +114,7 @@ class Scoring extends React.Component {
             team2NewScore -=1;
         }
 
-        newScoreEntries.push({team1Score: team1NewScore, team2Score: team2NewScore});
+        newScoreEntries.push({id: scoreEntries.length + 1, team1Score: team1NewScore, team2Score: team2NewScore});
 
         firebase.database().ref('/tournaments/' + this.props.tournament.currentTournamentId + '/games/' + this.props.uistate.currentGame.gameId).update({
             team1ScoreFinal: team1NewScore,
@@ -131,15 +131,31 @@ class Scoring extends React.Component {
     }
 
     handleGameOver = () => {
-        firebase.database().ref('/tournaments/' + this.props.tournament.currentTournamentId + '/games/' + this.props.uistate.currentGame.gameId).update({
-            isGameFinished: true
-        });
+        const currentGame = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].games[this.props.uistate.currentGame.gameId];
+        let {team1ScoreFinal, team2ScoreFinal, scoreEntries} = currentGame;
+        if(team1ScoreFinal >= 21 || team2ScoreFinal >= 21) {
+            if(team1ScoreFinal >= 20 && team2ScoreFinal >=20) {
+                if(team1ScoreFinal > team2ScoreFinal) { 
+                    team1ScoreFinal = 21;
+                    team2ScoreFinal = 20;
+                } else {
+                    team1ScoreFinal = 20;
+                    team2ScoreFinal = 21;
+                }
+            }
+            firebase.database().ref('/tournaments/' + this.props.tournament.currentTournamentId + '/games/' + this.props.uistate.currentGame.gameId).update({
+                isGameFinished: true,
+                team1ScoreFinal: team1ScoreFinal,
+                team2ScoreFinal: team2ScoreFinal
+            });
+            Alert.alert('Game Data Locked!');
+        } else {
+            Alert.alert('Scores less than 21');
+        }
     }
 
     handleManualOverride = () => {
-        console.log("BEFOE", this.state.isManualOverride);        
         this.setState({isManualOverride: !this.state.isManualOverride});
-        console.log("After", this.state.isManualOverride);
     }
     
     render() {

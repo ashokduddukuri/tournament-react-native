@@ -233,6 +233,7 @@ class FixtureView extends React.Component {
             this.props.updateCurrentGame({gameId: id, team1Players, team2Players});
         }
         
+        this.setState({isChoosePlayerEnabled: false});
         this.props.navigation.navigate('Scoring');
 
     }
@@ -304,7 +305,7 @@ class FixtureView extends React.Component {
                         }
                         </Body>
                         <Body style={{alignItems: 'center'}}>
-                            {data.team1Players && this.props.uistate.isReferee ?
+                            {data.team1Players && this.props.uistate.isReferee && !data.isGameFinished?
                                 <Button style={{alignItems: 'flex-end'}} success onPress={() => this.handleStartGame(false, data.gameId)}>
                                     <Text style={styles.buttonText} > Continue </Text>
                                 </Button>

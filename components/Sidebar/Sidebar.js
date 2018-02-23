@@ -26,14 +26,20 @@ const datas = [
     bg: "#C5F442"
   },
   {
-    name: "Teams",
-    route: "Teams",
+    name: "Fixtures",
+    route: "Fixtures",
     icon: "people",
     bg: "#C5F442"
   },
   {
-    name: "Fixtures",
-    route: "Fixtures",
+    name: "Leaderboard",
+    route: "Leaderboard",
+    icon: "md-paper",
+    bg: "#C5F442"
+  },  
+  {
+    name: "Teams",
+    route: "Teams",
     icon: "people",
     bg: "#C5F442"
   },

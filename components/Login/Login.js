@@ -8,6 +8,7 @@ import {bindActionCreators} from 'redux';
 import {Button} from 'native-base';
 import styles from './style';
 import * as firebase from 'firebase';
+import {Permissions, Notifications} from 'expo';
 import {updateTournamentData} from './../../redux/actions/tournament';
 
 class Login extends React.Component {
@@ -15,6 +16,38 @@ class Login extends React.Component {
       drawerLabel: 'Login',
       fontSize: 20,
       drawerIcon: ({tintColor}) => (<Image source={require('./login.jpeg')} style={{width: 20, height: 26}}/>)
+    }
+
+    registerForNotification = (user) => {
+        console.log(user);
+        async function registerForPushNotificationsAsync() {
+            const {status: existingStatus} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+            let finalStatus = existingStatus;
+
+            // only ask if permissions have not already been determined, because iOS won't
+            // necessarily prompt the user a second time.
+            if (existingStatus !== 'granted') {
+                // Android remote notification permissions are granted during the app install,
+                // so this will only ask on iOS
+                const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+                finalStatus = status;
+            }
+
+            // Stop here if the user did not grant permissions
+            if (finalStatus !== 'granted') {
+                return;
+            }
+
+            // Get the token that uniquely identifies this device
+            let token = await Notifications.getExpoPushTokenAsync();
+            console.log(token);
+            firebase
+                .database()
+                .ref(`token/${user.id}/`)
+                .set({token});
+            console.log("token updated");
+        }
+        registerForPushNotificationsAsync();
     }
 
     componentWillMount() {
@@ -44,6 +77,7 @@ class Login extends React.Component {
                     self
                         .props
                         .addGInfo(result);
+                    self.registerForNotification(result.user);
                     this
                         .navigateToDrawer();
                     return result.accessToken;
@@ -62,14 +96,13 @@ class Login extends React.Component {
     }
 
     navigateToScreen = () => {
-      this.props.navigation.navigate('Fixtures');
+      this.props.navigation.navigate('Leaderboard');
     }
 
     navigateToDrawer = () => {
         this.props.navigation.navigate('DrawerOpen');
     }
     render() {
-        console.log(this.props.user);
         
         return (<ImageBackground
               style={{
