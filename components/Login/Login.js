@@ -58,7 +58,7 @@ class Login extends React.Component {
         
     }
     componentDidMount() {
-        this.navigateToScreen();
+        // this.navigateToScreen();
     }
 
     navigateToScreen = () => {
