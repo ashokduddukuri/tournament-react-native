@@ -44,8 +44,8 @@ class Leaderboard extends React.Component {
                 </Body>
                 <Body style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text style={{textAlign: 'left'}}>{item.pointsWon}</Text>
-                    <Text>{item.gamesPlayed}</Text>
                     <Text>{item.gamesWon}</Text>
+                    <Text>{item.gamesPlayed}</Text>
                 </Body>
             </ListItem>
         );
@@ -80,7 +80,6 @@ class Leaderboard extends React.Component {
         const leaderboardData = getLeaderboardData(tournamentData);
 
         const getLeaderboardListData = this.sanitizeLeaderboardData(leaderboardData);
-        console.log("LEADERBOARD", getLeaderboardListData)
         return (
             <FlatList 
                 data={getLeaderboardListData}
@@ -96,20 +95,11 @@ class Leaderboard extends React.Component {
                 <HeaderWithMenu style = {{ flex: 0.05 }} { ...this.props } title = { this.state.titleText } /> 
                 <View style = {{ flex: 1 }} >
                     <ListItem >
-                        <Text style={{flex: 0.15}}>Rank</Text>
-                        <Text style={{flex: 0.4, textAlign: 'center'}}>Team</Text>
-                        <Text style={{flex: 0.3, textAlign: 'center'}}>Games Played</Text>
+                        <Text style={{flex: 0.2}}>Rank</Text>
+                        <Text style={{flex: 0.5, textAlign: 'center'}}>Team</Text>
+                        <Text style={{flex: 0.3, textAlign: 'center'}}>Points Won</Text>
                         <Text style={{flex: 0.3, textAlign: 'center'}}>Games Won</Text>
-                        <Text style={{flex: 0.2, alignItems: 'flex-end'}}>Points Won</Text>
-                        
-                        {/* <Body style={{alignItems: 'center'}} >
-                        </Body>
-                        <Body style={{flex: 1, flexDirection: 'flex-end', justifyContent: 'space-between'}}>
-                        </Body>
-                        <Body>
-                        </Body>
-                        <Body style={{width: 50}}>
-                        </Body> */}
+                        <Text style={{flex: 0.3, textAlign: 'right'}}>Games Played</Text>
                     </ListItem>
                     {this.renderTeams()}
                 </View > 

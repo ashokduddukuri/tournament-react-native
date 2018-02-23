@@ -38,7 +38,7 @@ class FixtureView extends React.Component {
         this.state = {
             t1p1: undefined,
             isChoosePlayerEnabled: false,
-            currentGameId: null
+            currentGameId: this.props.uistate.currentGame ? this.props.uistate.currentGame.gameId : null
         };
     }
 
@@ -206,7 +206,7 @@ class FixtureView extends React.Component {
 
         if(isSaveData) {
             // to handle first time game start and save data to firebase
-            if((gameData[this.state.currentGameId].teamSize == team1Players.length) && (team2Players.length == gameData[this.state.currentGameId].teamSize)){
+            if(gameData[this.state.currentGameId] && (gameData[this.state.currentGameId].teamSize == team1Players.length) && (team2Players.length == gameData[this.state.currentGameId].teamSize)){
                 const referee = this.props.user.user.email;
         
                 const referees = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].games[this.state.currentGameId].referees || [];
@@ -221,20 +221,23 @@ class FixtureView extends React.Component {
                     });
             const gameId = this.state.currentGameId;
             const refId = this.props.user.user.email;
-            console.log(team1Players, team2Players, gameId);
             this.props.updateCurrentGame({gameId: gameId, team1Players: team1Players, team2Players: team2Players});
+            this.setState({isChoosePlayerEnabled: false});
+            this.props.navigation.navigate('Scoring');
             } else {
-                Alert.alert('Choose appropriate players')
+                this.setState({isChoosePlayerEnabled: false});
+                Alert.alert('Choose appropriate players');
+                this.props.navigation.navigate('FixtureView');
             }
         } else {
             // to update the store with available game data
             const currentGame = this.props.tournament.tournaments[this.props.tournament.currentTournamentId].games[selectedGameId];
             const {id, team1Players, team2Players} = currentGame;
             this.props.updateCurrentGame({gameId: id, team1Players, team2Players});
+            this.setState({isChoosePlayerEnabled: false});
+            this.props.navigation.navigate('Scoring');
         }
         
-        this.setState({isChoosePlayerEnabled: false});
-        this.props.navigation.navigate('Scoring');
 
     }
 

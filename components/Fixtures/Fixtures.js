@@ -198,18 +198,48 @@ class Fixtures extends React.Component {
         
         const currentTournament = tournamentData.tournaments[tournamentData.currentTournamentId];
 
-        const { matches, teams } = currentTournament;
+        const { matches, teams, games } = currentTournament;
         
         const isMatchesCreated = currentTournament.matches ? true: false;
         if(!isMatchesCreated) {
             this.createMatchesInFirebase();
             return;
         }
-
+        console.log(matches);
+        
         let fixturesListData = matches.map((match, index) => {
-            if(!match.team1) {
+            if(match.team1 === undefined) {
                 return;
             }
+            console.log(match.id);
+            
+            const matchGames = games.filter((game) => {
+                return game.matchId == match.id;
+            });
+            let isMatchOngoing = false;
+            let isMatchFinished = false;
+
+            matchGames.map((gam) => {
+                if(gam.isGameOngoing == true) {
+                    isMatchOngoing = true;
+                    return;
+                }
+            });
+            // console.log(matchGames);
+            
+            const finishedGames = matchGames.filter((gam) => {
+                return gam.isGameFinished == true;
+            });
+            // console.log(finishedGames);
+            
+            if(finishedGames.length >= 6) {
+                isMatchFinished = true;
+            }
+            // console.log(isMatchFinished);
+
+
+
+
             const team1 = teams.filter((team) => {
                 return team.id == match.team1;
             })[0];
@@ -234,7 +264,9 @@ class Fixtures extends React.Component {
                 owner2: owner2,
                 team1MatchScore: teamMatchScores.team1MatchScore,
                 team2MatchScore: teamMatchScores.team2MatchScore,
-                isMatchesCreated: match.isMatchesCreated
+                isMatchesCreated: match.isMatchesCreated,
+                isMatchOngoing: isMatchOngoing,
+                isMatchFinished: isMatchFinished
             }
         });
         // console.log(fixturesListData);
@@ -254,7 +286,15 @@ class Fixtures extends React.Component {
             <ListItem 
                 button
                 onPress={() => this.handleTeamClick(item.matchId)}
-            >
+            >   
+                {item.isMatchOngoing && !item.isMatchFinished ? 
+                    <Icon style={{color:"green"}} name="ios-timer" />
+                    : null
+                }
+                {item.isMatchFinished ? 
+                    <Icon style={{color:"red"}} name="ios-ribbon" />
+                    : null
+                }
                 <Body style={{alignItems: 'center'}}>
                     <Thumbnail size={55} source={{ uri:item.team1.imageUrl }} />
                     <Text note>
