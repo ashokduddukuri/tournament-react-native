@@ -13,7 +13,7 @@ import {
 } from "native-base";
 import styles from "./style";
 
-const drawerCover = require("./../../assets/images/knol-logo.png");
+const drawerCover = require("./../../assets/images/sidebar-bg.png");
 const drawerImage = require("./../../assets/images/kbl-img.png");
 const iconPlyers = require("./../../assets/images/player.png");
 const iconBidding = require("./../../assets/images/bid.png");
