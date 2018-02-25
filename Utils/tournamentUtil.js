@@ -97,24 +97,41 @@ getLeaderboardData = (tournamentData) => {
         // const games = Object.values(tournamentData.games);
         // console.log(games, matches, teams);
         teamScores.sort((a, b) => {
-            // Points won should be greater
-            if (a.pointsWon > b.pointsWon) {
-                return -1;
-            } else if (a.pointsWon < b.pointsWon) {
-                return 1;
+            if (tournamentData.currentStageId === 0) {
+                // Points won should be greater
+                if (a.pointsWon > b.pointsWon) {
+                    return -1;
+                } else if (a.pointsWon < b.pointsWon) {
+                    return 1;
+                }
+                // Games won should be greater
+                if (a.gamesWon > b.gamesWon) {
+                    return -1;
+                } else if (a.gamesWon < b.gamesWon) {
+                    return 1;
+                }
             }
-            // Games won should be greater
-            if (a.gamesWon > b.gamesWon) {
-                return -1;
-            } else if (a.gamesWon < b.gamesWon) {
-                return 1;
+            else {
+                if (a.gamesWon > b.gamesWon) {
+                    return -1;
+                } else if (a.gamesWon < b.gamesWon) {
+                    return 1;
+                }
+
+                // Points won should be greater
+                if (a.pointsWon > b.pointsWon) {
+                    return -1;
+                } else if (a.pointsWon < b.pointsWon) {
+                    return 1;
+                }
             }
+            
             // Points lost should be lesser
-            if (a.pointsLost < b.pointsLost) {
-                return -1;
-            } else if (a.pointsLost > b.pointsLost) {
-                return 1;
-            }
+            // if (a.pointsLost < b.pointsLost) {
+            //     return -1;
+            // } else if (a.pointsLost > b.pointsLost) {
+            //     return 1;
+            // }
             return 1;
         });
         return teamScores;
